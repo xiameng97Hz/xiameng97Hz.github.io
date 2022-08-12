@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <meta name="description" content="问题建模：  给出两个结点，判断它们是否连通，如果连通，不需要给出具体的路径 → Union Find 给出两个结点，判断它们是否连通，如果连通，需要给出具体的路径 → DFS  应用场景：图片中的pixel，网络中的电脑，社交网络中的朋友，芯片中的晶体管，数学集合中的元素…… 操作：Union并: 将两个对象合并入同一集合Find查: 检查两个对象是否属于同一集合 Quick-find: id[">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Union Find">
+<meta property="og:url" content="http://yoursite.com/2020/07/27/union-find/index.html">
+<meta property="og:site_name" content="xiammiii">
+<meta property="og:description" content="问题建模：  给出两个结点，判断它们是否连通，如果连通，不需要给出具体的路径 → Union Find 给出两个结点，判断它们是否连通，如果连通，需要给出具体的路径 → DFS  应用场景：图片中的pixel，网络中的电脑，社交网络中的朋友，芯片中的晶体管，数学集合中的元素…… 操作：Union并: 将两个对象合并入同一集合Find查: 检查两个对象是否属于同一集合 Quick-find: id[">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://imgur.com/onSWnjy.png">
+<meta property="og:image" content="https://imgur.com/lfofWdD.png">
+<meta property="og:image" content="https://imgur.com/BVffVnl.png">
+<meta property="og:image" content="https://imgur.com/7BSmCiv.png">
+<meta property="og:image" content="https://imgur.com/NDdUG0I.png">
+<meta property="og:image" content="https://imgur.com/hpTNwcy.png">
+<meta property="og:image" content="https://imgur.com/zIEVYrU.png">
+<meta property="og:image" content="https://imgur.com/Q5X6pZ9.png">
+<meta property="og:image" content="https://imgur.com/ArQLZj5.png">
+<meta property="og:image" content="https://imgur.com/gcpQwyk.png">
+<meta property="og:image" content="https://imgur.com/YObNVHV.png">
+<meta property="article:published_time" content="2020-07-27T18:19:08.000Z">
+<meta property="article:modified_time" content="2020-09-06T19:50:20.707Z">
+<meta property="article:author" content="xiammiii">
+<meta property="article:tag" content="算法">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://imgur.com/onSWnjy.png">
+    
+    
+        
+          
+              <link rel="shortcut icon" href="/images/favicon.ico">
+          
+        
+        
+          
+            <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+          
+        
+        
+          
+            <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+          
+        
+    
+    <!-- title -->
+    <title>Union Find</title>
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+      
+<link rel="stylesheet" href="/css/rtl.css">
+
+    
+    <!-- rss -->
+    
+    
+<meta name="generator" content="Hexo 4.2.1"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/tags/">Tags</a></li>
+        
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" href="/2020/08/31/%E6%8E%92%E5%BA%8F-%E5%BF%AB%E9%80%9F%E9%80%89%E6%8B%A9-%E8%8D%B7%E5%85%B0%E5%9B%BD%E6%97%97%E9%97%AE%E9%A2%98/"><i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=http://yoursite.com/2020/07/27/union-find/" target="_blank" rel="noopener"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=http://yoursite.com/2020/07/27/union-find/&text=Union Find" target="_blank" rel="noopener"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=http://yoursite.com/2020/07/27/union-find/&title=Union Find" target="_blank" rel="noopener"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=http://yoursite.com/2020/07/27/union-find/&is_video=false&description=Union Find" target="_blank" rel="noopener"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=Union Find&body=Check out this article: http://yoursite.com/2020/07/27/union-find/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=http://yoursite.com/2020/07/27/union-find/&title=Union Find" target="_blank" rel="noopener"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=http://yoursite.com/2020/07/27/union-find/&title=Union Find" target="_blank" rel="noopener"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=http://yoursite.com/2020/07/27/union-find/&title=Union Find" target="_blank" rel="noopener"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=http://yoursite.com/2020/07/27/union-find/&title=Union Find" target="_blank" rel="noopener"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=http://yoursite.com/2020/07/27/union-find/&name=Union Find&description=" target="_blank" rel="noopener"><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://news.ycombinator.com/submitlink?u=http://yoursite.com/2020/07/27/union-find/&t=Union Find" target="_blank" rel="noopener"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#Quick-find-id-i-表示i所属的集合"><span class="toc-number">1.</span> <span class="toc-text">Quick-find: id[i]表示i所属的集合</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Quick-union-id-i-表示i的父结点"><span class="toc-number">2.</span> <span class="toc-text">Quick-union: id[i]表示i的父结点</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#优化-加权-amp-路径压缩"><span class="toc-number">3.</span> <span class="toc-text">优化(加权&amp;路径压缩)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#总结"><span class="toc-number">4.</span> <span class="toc-text">总结</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#应用：Perlocation从顶部到底部渗透"><span class="toc-number">5.</span> <span class="toc-text">应用：Perlocation从顶部到底部渗透</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Leetcode"><span class="toc-number">6.</span> <span class="toc-text">Leetcode</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#参考阅读"><span class="toc-number">7.</span> <span class="toc-text">参考阅读</span></a></li></ol>
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index py4">
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        Union Find
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">xiammiii</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2020-07-27T18:19:08.000Z" itemprop="datePublished">2020-07-27</time>
+        
+      
+    </div>
+
+
+      
+
+      
+    <div class="article-tag">
+        <i class="fas fa-tag"></i>
+        <a class="tag-link" href="/tags/%E7%AE%97%E6%B3%95/" rel="tag">算法</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <p>问题建模：</p>
+<ul>
+<li>给出两个结点，判断它们是否连通，如果连通，不需要给出具体的路径 → Union Find</li>
+<li>给出两个结点，判断它们是否连通，如果连通，需要给出具体的路径 → DFS</li>
+</ul>
+<p>应用场景：图片中的pixel，网络中的电脑，社交网络中的朋友，芯片中的晶体管，数学集合中的元素……</p>
+<p>操作：<br>Union并: 将两个对象合并入同一集合<br>Find查: 检查两个对象是否属于同一集合</p>
+<h3 id="Quick-find-id-i-表示i所属的集合"><a href="#Quick-find-id-i-表示i所属的集合" class="headerlink" title="Quick-find: id[i]表示i所属的集合"></a>Quick-find: id[i]表示i所属的集合</h3><p>查：p,q是否属于同一集合，id[p]=id[q]?</p>
+<p><img src="https://imgur.com/onSWnjy.png" alt="Union%20Find%20470b56bc066e415f989c3707d44d1511/Untitled%201.png"></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">UFQuickFind</span></span>&#123;</span><br><span class="line">	<span class="keyword">private</span> <span class="keyword">int</span>[] id;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="title">UFQuickFind</span><span class="params">(<span class="keyword">int</span> N)</span></span>&#123; <span class="comment">// O(N)</span></span><br><span class="line">		id = <span class="keyword">new</span> <span class="keyword">int</span>[N];</span><br><span class="line">		<span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; N; i++)&#123; id[i] = i; &#125; <span class="comment">// 初始化：每个元素自成一个集合</span></span><br><span class="line">	&#125;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">union</span><span class="params">(<span class="keyword">int</span> p, <span class="keyword">int</span> q)</span></span>&#123; <span class="comment">// O(N)</span></span><br><span class="line">		<span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; N; i++)&#123;</span><br><span class="line">			<span class="keyword">if</span>(id[i] == id[p])&#123; id[i] = id[q]; &#125; <span class="comment">// 将集合id[p]里所有元素合并到集合id[q]里</span></span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">find</span><span class="params">(<span class="keyword">int</span> p, <span class="keyword">int</span> q)</span></span>&#123; <span class="comment">// O(1)</span></span><br><span class="line">		<span class="keyword">return</span> id[p] == id[q];</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>优点：find只需要O(1)</p>
+<p>缺点：因为每个结点的集合编号是独立记录的，没有以更好的方式(ie.数据结构)组织起来，所以进行一次union操作需要遍历整个集合来找到要修改的结点</p>
+<h3 id="Quick-union-id-i-表示i的父结点"><a href="#Quick-union-id-i-表示i的父结点" class="headerlink" title="Quick-union: id[i]表示i的父结点"></a>Quick-union: id[i]表示i的父结点</h3><p>i的根结点是id[id[……id[i]]]</p>
+<p>并：让p的根结点的父结点为q的根结点，id[pRoot] = qRoot</p>
+<p>查：p和q是否有相同根结点，root(p) == root(q)?</p>
+<p><img src="https://imgur.com/lfofWdD.png" alt="Union%20Find%20470b56bc066e415f989c3707d44d1511/Untitled%202.png"></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">UFQuickUnion</span></span>&#123;</span><br><span class="line">	<span class="keyword">private</span> <span class="keyword">int</span>[] id;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="title">UFQuickUnion</span><span class="params">(<span class="keyword">int</span> N)</span></span>&#123; <span class="comment">// 初始化O(N)</span></span><br><span class="line">		id = <span class="keyword">new</span> <span class="keyword">int</span>[N];</span><br><span class="line">		<span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; N; i++)&#123; id[i] = i; &#125;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">root</span><span class="params">(<span class="keyword">int</span> p)</span></span>&#123; <span class="comment">// O(N)</span></span><br><span class="line">		<span class="keyword">while</span>(p != id[p])&#123; p = id[p]; &#125;</span><br><span class="line">		<span class="keyword">return</span> p;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">union</span><span class="params">(<span class="keyword">int</span> p, <span class="keyword">int</span> q)</span></span>&#123; <span class="comment">// O(N)</span></span><br><span class="line">		<span class="keyword">int</span> pRoot = root(p);</span><br><span class="line">		<span class="keyword">int</span> qRoot = root(q);</span><br><span class="line">		id[pRoot] = qRoot;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">find</span><span class="params">(<span class="keyword">int</span> p, <span class="keyword">int</span> q)</span></span>&#123; <span class="comment">// O(N)</span></span><br><span class="line">		<span class="keyword">return</span> root(p) == root(q);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>优点：将结点与集合的关系以树的形式表现出来</p>
+<p>缺点：树这种数据结构很容易出现极端情况，因为在建树的过程中，树的最终形态严重依赖于输入数据本身的性质，比如数据是否排序，是否随机分布等等。比如在输入数据是有序的情况下，构造的BST会退化成一个链表。在Quick Union的union()中，id[pRoot] = qRoot是基于让p所在的树成为q所在树的子树而hardcoded的，从而实现两颗独立的树的融合。那么这样的约定是不是总是合理的呢？显然不是，比如p所在的树的规模比q所在的树的规模大的多时，p和q结合之后形成的树就是十分不和谐的一头轻一头重的”畸形树“了。</p>
+<p><img src="https://imgur.com/BVffVnl.png" alt="Union%20Find%20470b56bc066e415f989c3707d44d1511/Untitled%203.png"></p>
+<h3 id="优化-加权-amp-路径压缩"><a href="#优化-加权-amp-路径压缩" class="headerlink" title="优化(加权&amp;路径压缩)"></a>优化(加权&amp;路径压缩)</h3><ul>
+<li>优化1: weighted quick union</li>
+</ul>
+<p>idea: 每次union将矮树连到高树下 → 记录树的高度sz<a href="以牺牲空间来减小时间"></a>，</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">WeightedQuickUnion</span></span>&#123;</span><br><span class="line">	<span class="keyword">private</span> <span class="keyword">int</span>[] id, sz;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="title">WeightedQuickUnion</span><span class="params">(<span class="keyword">int</span> N)</span></span>&#123; <span class="comment">// 初始化</span></span><br><span class="line">		id = <span class="keyword">new</span> <span class="keyword">int</span>[N];</span><br><span class="line">		<span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; N; i++)&#123;</span><br><span class="line">			id[i] = i;</span><br><span class="line">			sz[i] = <span class="number">1</span>;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">union</span><span class="params">(<span class="keyword">int</span> p, <span class="keyword">int</span> q)</span></span>&#123; <span class="comment">// O(logN)：因为有结点数N的树，高度最多为logN</span></span><br><span class="line">		<span class="keyword">int</span> pRoot = root(p);</span><br><span class="line">		<span class="keyword">int</span> qRoot = root(q);</span><br><span class="line">		<span class="keyword">if</span>(pRoot == qRoot) <span class="keyword">return</span>; <span class="comment">// p,q高度相同</span></span><br><span class="line">		<span class="keyword">if</span>(sz[p] &lt; sz[q])&#123; id[pRoot] = qRoot; sz[qRoot] += sz[pRoot]; &#125; <span class="comment">// p比q矮，p的根节点等于q的根结点，更新q的根结点的高度</span></span><br><span class="line">		<span class="keyword">else</span>&#123; id[qRoot] = pRoot; sz[pRoot] += sz[qRoot]; &#125; <span class="comment">// q比p矮，q的根节点等于p的根结点，更新p的根结点的高度</span></span><br><span class="line">	&#125;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">find</span><span class="params">(<span class="keyword">int</span> p, <span class="keyword">int</span> q)</span></span>&#123; <span class="comment">// O(logN)：原因同上</span></span><br><span class="line">		<span class="keyword">return</span> root(p) == root(q);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>注意高矮的不同定义Union by size(根据结点数) 和 Union by height(根据树的高度)，但时复都是logN。右图为Quick Union与Weighted Quick Union的比较。右图还可以给我们一些启示，即对于Quick-Union算法而言，结点组织的理想情况应该是一颗十分扁平的树，所有的孩子结点应该都在height=1的地方，即所有的孩子都直接连接到根节点。这样的组织结构能够保证find操作的最高效率。</p>
+<p><img src="https://imgur.com/7BSmCiv.png" alt="Union%20Find%20470b56bc066e415f989c3707d44d1511/Untitled%204.png"></p>
+<ul>
+<li>优化2: 路径压缩path compression</li>
+</ul>
+<p>将结点p及其所有父结点连到p的根上</p>
+<p><img src="https://imgur.com/NDdUG0I.png" alt="Union%20Find%20470b56bc066e415f989c3707d44d1511/Untitled%205.png"></p>
+<p><img src="https://imgur.com/hpTNwcy.png" alt="Union%20Find%20470b56bc066e415f989c3707d44d1511/Untitled%206.png"></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">root</span><span class="params">(<span class="keyword">int</span> p)</span></span>&#123;</span><br><span class="line">	<span class="keyword">while</span>(p != id[p])&#123;</span><br><span class="line">		id[p] = id[id[p]]; <span class="comment">// p的父结点等于p的父结点的父结点 -&gt; 使得路径长度减半</span></span><br><span class="line">		p = id[p];</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span> p;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p><img src="https://imgur.com/zIEVYrU.png" alt="Union%20Find%20470b56bc066e415f989c3707d44d1511/Untitled%207.png"></p>
+<h3 id="应用：Perlocation从顶部到底部渗透"><a href="#应用：Perlocation从顶部到底部渗透" class="headerlink" title="应用：Perlocation从顶部到底部渗透"></a>应用：Perlocation从顶部到底部渗透</h3><p><img src="https://imgur.com/Q5X6pZ9.png" alt="Union%20Find%20470b56bc066e415f989c3707d44d1511/Untitled%208.png"></p>
+<p>白色可流通，黑色不可流通；导体可流通电，绝缘体不可流通电；社交网络中，一群组是否与另一群组相通</p>
+<p>渗透的可能性与open site数在NxN grid中的概率有关，且此概率有阈值，小于该阈值几乎肯定不能渗透，大于该阈值几乎肯定能渗透。</p>
+<p>如何知道是否渗透？假设top&amp;bottom sites，判断top&amp;bottom sites是否connected?</p>
+<p><img src="https://imgur.com/ArQLZj5.png" alt="Union%20Find%20470b56bc066e415f989c3707d44d1511/Untitled%209.png"></p>
+<p><img src="https://imgur.com/gcpQwyk.png" alt="Union%20Find%20470b56bc066e415f989c3707d44d1511/Untitled%2010.png"></p>
+<p><img src="https://imgur.com/YObNVHV.png" alt="Union%20Find%20470b56bc066e415f989c3707d44d1511/Untitled%2011.png"></p>
+<h3 id="Leetcode"><a href="#Leetcode" class="headerlink" title="Leetcode"></a>Leetcode</h3><p>Union Find基本运用：<br>547: Friends Circle - Weighted Quick Union</p>
+<ol start="323">
+<li>Number of Connected Components in an Undirected Graph - Weighted + 路径压缩; 对于每条边，若已connect，continue; 若未connect，union()，n- -; 最后n即为集合总数</li>
+<li>Graph Valid Tree - Weighted + 路径压缩; 对于每条边，若已connect，return false; 若未connect，union()，n- -; 最后若n等于1，return true; 否则，return false</li>
+<li>Redundant Connection - Weighted + 路径压缩; 找到最后一条2个node已连接的边</li>
+</ol>
+<p>Union Find变形运用：<br>685. Redundant Connection II</p>
+<h3 id="参考阅读"><a href="#参考阅读" class="headerlink" title="参考阅读"></a>参考阅读</h3><p>Section 1.4 and 1.5 in Algorithms, 4th edition.<br><a href="https://blog.csdn.net/dm_vincent/article/details/7655764" target="_blank" rel="noopener">https://blog.csdn.net/dm_vincent/article/details/7655764</a></p>
+
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/tags/">Tags</a></li>
+        
+      </ul>
+    </div>
+
+    <div id="toc-footer" style="display: none">
+      <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#Quick-find-id-i-表示i所属的集合"><span class="toc-number">1.</span> <span class="toc-text">Quick-find: id[i]表示i所属的集合</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Quick-union-id-i-表示i的父结点"><span class="toc-number">2.</span> <span class="toc-text">Quick-union: id[i]表示i的父结点</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#优化-加权-amp-路径压缩"><span class="toc-number">3.</span> <span class="toc-text">优化(加权&amp;路径压缩)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#总结"><span class="toc-number">4.</span> <span class="toc-text">总结</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#应用：Perlocation从顶部到底部渗透"><span class="toc-number">5.</span> <span class="toc-text">应用：Perlocation从顶部到底部渗透</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Leetcode"><span class="toc-number">6.</span> <span class="toc-text">Leetcode</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#参考阅读"><span class="toc-number">7.</span> <span class="toc-text">参考阅读</span></a></li></ol>
+    </div>
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=http://yoursite.com/2020/07/27/union-find/" target="_blank" rel="noopener"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=http://yoursite.com/2020/07/27/union-find/&text=Union Find" target="_blank" rel="noopener"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=http://yoursite.com/2020/07/27/union-find/&title=Union Find" target="_blank" rel="noopener"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=http://yoursite.com/2020/07/27/union-find/&is_video=false&description=Union Find" target="_blank" rel="noopener"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=Union Find&body=Check out this article: http://yoursite.com/2020/07/27/union-find/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=http://yoursite.com/2020/07/27/union-find/&title=Union Find" target="_blank" rel="noopener"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=http://yoursite.com/2020/07/27/union-find/&title=Union Find" target="_blank" rel="noopener"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=http://yoursite.com/2020/07/27/union-find/&title=Union Find" target="_blank" rel="noopener"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=http://yoursite.com/2020/07/27/union-find/&title=Union Find" target="_blank" rel="noopener"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=http://yoursite.com/2020/07/27/union-find/&name=Union Find&description=" target="_blank" rel="noopener"><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://news.ycombinator.com/submitlink?u=http://yoursite.com/2020/07/27/union-find/&t=Union Find" target="_blank" rel="noopener"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2020-2022
+    xiammiii
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/tags/">Tags</a></li>
+        
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+
+<link rel="stylesheet" href="/lib/justified-gallery/css/justifiedGallery.min.css">
+
+
+    <!-- jquery -->
+
+<script src="/lib/jquery/jquery.min.js"></script>
+
+
+<script src="/lib/justified-gallery/js/jquery.justifiedGallery.min.js"></script>
+
+<!-- clipboard -->
+
+  
+<script src="/lib/clipboard/clipboard.min.js"></script>
+
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"Copy to clipboard!\">";
+    btn += '<i class="far fa-clone"></i>';
+    btn += '</span>'; 
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "Copied!");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Google Analytics -->
+
+<!-- Baidu Analytics -->
+
+<!-- Disqus Comments -->
+
+
+</body>
+</html>

@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <meta name="description" content="相关概念稳定：如果a原本在b前面，而a&#x3D;b，排序之后a仍然在b的前面。不稳定：如果a原本在b的前面，而a&#x3D;b，排序之后 a 可能会出现在 b 的后面。 选择排序Selection Sort在未排序序列中找到最小（大）元素，存放到排序序列的起始位置，然后，再从剩余未排序元素中继续寻找最小（大）元素，然后放到已排序序列的末尾。以此类推，直到所有元素均排序完毕。  12345678910public v">
+<meta property="og:type" content="article">
+<meta property="og:title" content="排序总结、快速选择、荷兰国旗问题">
+<meta property="og:url" content="http://yoursite.com/2020/08/31/%E6%8E%92%E5%BA%8F-%E5%BF%AB%E9%80%9F%E9%80%89%E6%8B%A9-%E8%8D%B7%E5%85%B0%E5%9B%BD%E6%97%97%E9%97%AE%E9%A2%98/index.html">
+<meta property="og:site_name" content="xiammiii">
+<meta property="og:description" content="相关概念稳定：如果a原本在b前面，而a&#x3D;b，排序之后a仍然在b的前面。不稳定：如果a原本在b的前面，而a&#x3D;b，排序之后 a 可能会出现在 b 的后面。 选择排序Selection Sort在未排序序列中找到最小（大）元素，存放到排序序列的起始位置，然后，再从剩余未排序元素中继续寻找最小（大）元素，然后放到已排序序列的末尾。以此类推，直到所有元素均排序完毕。  12345678910public v">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://yoursite.com/images/algo/selection_sort.gif">
+<meta property="og:image" content="http://yoursite.com/images/algo/insertion_sort.gif">
+<meta property="og:image" content="http://yoursite.com/images/algo/shell_sort.gif">
+<meta property="og:image" content="http://yoursite.com/images/algo/merge_sort_recursive.png">
+<meta property="og:image" content="http://yoursite.com/images/algo/merge_sort_iterative.png">
+<meta property="og:image" content="http://yoursite.com/images/algo/quick_sort.png">
+<meta property="article:published_time" content="2020-09-01T06:26:40.000Z">
+<meta property="article:modified_time" content="2020-09-14T22:44:20.945Z">
+<meta property="article:author" content="xiammiii">
+<meta property="article:tag" content="算法">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://yoursite.com/images/algo/selection_sort.gif">
+    
+    
+        
+          
+              <link rel="shortcut icon" href="/images/favicon.ico">
+          
+        
+        
+          
+            <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+          
+        
+        
+          
+            <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+          
+        
+    
+    <!-- title -->
+    <title>排序总结、快速选择、荷兰国旗问题</title>
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+      
+<link rel="stylesheet" href="/css/rtl.css">
+
+    
+    <!-- rss -->
+    
+    
+<meta name="generator" content="Hexo 4.2.1"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/tags/">Tags</a></li>
+        
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" href="/2020/11/29/%E3%80%8A%E9%BB%91%E9%95%9C%E3%80%8B%E4%B8%AD%E7%9A%84%E5%9B%9E%E6%BA%AF%E7%AE%97%E6%B3%95/"><i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" href="/2020/07/27/union-find/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=http://yoursite.com/2020/08/31/%E6%8E%92%E5%BA%8F-%E5%BF%AB%E9%80%9F%E9%80%89%E6%8B%A9-%E8%8D%B7%E5%85%B0%E5%9B%BD%E6%97%97%E9%97%AE%E9%A2%98/" target="_blank" rel="noopener"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=http://yoursite.com/2020/08/31/%E6%8E%92%E5%BA%8F-%E5%BF%AB%E9%80%9F%E9%80%89%E6%8B%A9-%E8%8D%B7%E5%85%B0%E5%9B%BD%E6%97%97%E9%97%AE%E9%A2%98/&text=排序总结、快速选择、荷兰国旗问题" target="_blank" rel="noopener"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=http://yoursite.com/2020/08/31/%E6%8E%92%E5%BA%8F-%E5%BF%AB%E9%80%9F%E9%80%89%E6%8B%A9-%E8%8D%B7%E5%85%B0%E5%9B%BD%E6%97%97%E9%97%AE%E9%A2%98/&title=排序总结、快速选择、荷兰国旗问题" target="_blank" rel="noopener"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=http://yoursite.com/2020/08/31/%E6%8E%92%E5%BA%8F-%E5%BF%AB%E9%80%9F%E9%80%89%E6%8B%A9-%E8%8D%B7%E5%85%B0%E5%9B%BD%E6%97%97%E9%97%AE%E9%A2%98/&is_video=false&description=排序总结、快速选择、荷兰国旗问题" target="_blank" rel="noopener"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=排序总结、快速选择、荷兰国旗问题&body=Check out this article: http://yoursite.com/2020/08/31/%E6%8E%92%E5%BA%8F-%E5%BF%AB%E9%80%9F%E9%80%89%E6%8B%A9-%E8%8D%B7%E5%85%B0%E5%9B%BD%E6%97%97%E9%97%AE%E9%A2%98/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=http://yoursite.com/2020/08/31/%E6%8E%92%E5%BA%8F-%E5%BF%AB%E9%80%9F%E9%80%89%E6%8B%A9-%E8%8D%B7%E5%85%B0%E5%9B%BD%E6%97%97%E9%97%AE%E9%A2%98/&title=排序总结、快速选择、荷兰国旗问题" target="_blank" rel="noopener"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=http://yoursite.com/2020/08/31/%E6%8E%92%E5%BA%8F-%E5%BF%AB%E9%80%9F%E9%80%89%E6%8B%A9-%E8%8D%B7%E5%85%B0%E5%9B%BD%E6%97%97%E9%97%AE%E9%A2%98/&title=排序总结、快速选择、荷兰国旗问题" target="_blank" rel="noopener"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=http://yoursite.com/2020/08/31/%E6%8E%92%E5%BA%8F-%E5%BF%AB%E9%80%9F%E9%80%89%E6%8B%A9-%E8%8D%B7%E5%85%B0%E5%9B%BD%E6%97%97%E9%97%AE%E9%A2%98/&title=排序总结、快速选择、荷兰国旗问题" target="_blank" rel="noopener"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=http://yoursite.com/2020/08/31/%E6%8E%92%E5%BA%8F-%E5%BF%AB%E9%80%9F%E9%80%89%E6%8B%A9-%E8%8D%B7%E5%85%B0%E5%9B%BD%E6%97%97%E9%97%AE%E9%A2%98/&title=排序总结、快速选择、荷兰国旗问题" target="_blank" rel="noopener"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=http://yoursite.com/2020/08/31/%E6%8E%92%E5%BA%8F-%E5%BF%AB%E9%80%9F%E9%80%89%E6%8B%A9-%E8%8D%B7%E5%85%B0%E5%9B%BD%E6%97%97%E9%97%AE%E9%A2%98/&name=排序总结、快速选择、荷兰国旗问题&description=" target="_blank" rel="noopener"><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://news.ycombinator.com/submitlink?u=http://yoursite.com/2020/08/31/%E6%8E%92%E5%BA%8F-%E5%BF%AB%E9%80%9F%E9%80%89%E6%8B%A9-%E8%8D%B7%E5%85%B0%E5%9B%BD%E6%97%97%E9%97%AE%E9%A2%98/&t=排序总结、快速选择、荷兰国旗问题" target="_blank" rel="noopener"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#相关概念"><span class="toc-number">1.</span> <span class="toc-text">相关概念</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#选择排序Selection-Sort"><span class="toc-number">2.</span> <span class="toc-text">选择排序Selection Sort</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#插入排序Insertion-Sort"><span class="toc-number">3.</span> <span class="toc-text">插入排序Insertion Sort</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#合并排序Merge-sort"><span class="toc-number">4.</span> <span class="toc-text">合并排序Merge sort</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#递归-top-down-recursion"><span class="toc-number">4.1.</span> <span class="toc-text">递归(top-down)-recursion</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#迭代-bottom-up-iterative"><span class="toc-number">4.2.</span> <span class="toc-text">迭代(bottom-up)-iterative</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#快速排序Quick-sort"><span class="toc-number">5.</span> <span class="toc-text">快速排序Quick sort</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#快速选择Quick-Select：常用于第k大-小的问题"><span class="toc-number">5.1.</span> <span class="toc-text">快速选择Quick Select：常用于第k大&#x2F;小的问题</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#荷兰国旗问题：优化quick-sort，使其支持duplicate-keys，3-way-partitioning"><span class="toc-number">5.2.</span> <span class="toc-text">荷兰国旗问题：优化quick sort，使其支持duplicate keys，3-way partitioning</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#桶排序Bucket-sort：常用于top-k问题"><span class="toc-number">6.</span> <span class="toc-text">桶排序Bucket sort：常用于top k问题</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#堆排序Heap-sort"><span class="toc-number">7.</span> <span class="toc-text">堆排序Heap sort</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Java里Arrays-sort-的实现"><span class="toc-number">8.</span> <span class="toc-text">Java里Arrays.sort()的实现</span></a></li></ol>
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index py4">
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        排序总结、快速选择、荷兰国旗问题
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">xiammiii</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2020-09-01T06:26:40.000Z" itemprop="datePublished">2020-08-31</time>
+        
+      
+    </div>
+
+
+      
+
+      
+    <div class="article-tag">
+        <i class="fas fa-tag"></i>
+        <a class="tag-link" href="/tags/%E7%AE%97%E6%B3%95/" rel="tag">算法</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <h2 id="相关概念"><a href="#相关概念" class="headerlink" title="相关概念"></a>相关概念</h2><p><strong>稳定</strong>：如果a原本在b前面，而a=b，排序之后a仍然在b的前面。<br><strong>不稳定</strong>：如果a原本在b的前面，而a=b，排序之后 a 可能会出现在 b 的后面。</p>
+<h2 id="选择排序Selection-Sort"><a href="#选择排序Selection-Sort" class="headerlink" title="选择排序Selection Sort"></a>选择排序Selection Sort</h2><p>在未排序序列中找到最小（大）元素，存放到排序序列的起始位置，然后，再从剩余未排序元素中继续寻找最小（大）元素，然后放到已排序序列的末尾。以此类推，直到所有元素均排序完毕。</p>
+<p><img src="/images/algo/selection_sort.gif" alt="selection_sort.gif"></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">selectionSort</span><span class="params">(<span class="keyword">int</span>[] nums)</span></span>&#123;</span><br><span class="line">	<span class="keyword">int</span> N = nums.length;</span><br><span class="line">	<span class="keyword">for</span>(<span class="keyword">int</span> i  = <span class="number">0</span>; i &lt; N; i++)&#123;</span><br><span class="line">		<span class="keyword">int</span> min = i;</span><br><span class="line">		<span class="keyword">for</span>(<span class="keyword">int</span> j = i+<span class="number">1</span>; j &lt; N; j++)&#123;</span><br><span class="line">			<span class="keyword">if</span>(nums[j] &lt; nums[min])&#123; min = j; &#125;</span><br><span class="line">		&#125;</span><br><span class="line">		swap(nums, i, min);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>算法分析：不论初始排序如何，都是(N-1)+(N-2)+…+1 ~ $N^2/2$次比较，N次交换<br>时间复杂度O($n^2$)，空间复杂度O(1)<br>特点：n次交换，不稳定排序((7) 2 5 9 3 4 [7] 1…当我们利用直接选择排序算法进行排序时候,(7)和1调换,(7)就跑到了[7]的后面了,原来的次序改变了)<br>😁优点：不占用额外的内存空间<br>😢缺点：时复大<br>💡应用场景：数据规模较小且对内存空间有限制时</p>
+<h2 id="插入排序Insertion-Sort"><a href="#插入排序Insertion-Sort" class="headerlink" title="插入排序Insertion Sort"></a>插入排序Insertion Sort</h2><p>对于未排序数据，在已排序序列中从后向前扫描，找到相应位置并插入。</p>
+<p><img src="/images/algo/insertion_sort.gif" alt="insertion_sort.gif"></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">insertionSort</span><span class="params">(<span class="keyword">int</span>[] nums)</span></span>&#123;</span><br><span class="line">	<span class="keyword">int</span> N = nums.length;</span><br><span class="line">	<span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">1</span>; i &lt; N; i++)&#123;</span><br><span class="line">		<span class="keyword">for</span>(<span class="keyword">int</span> j = i; j &gt; <span class="number">0</span> &amp;&amp; nums[j] &lt; nums[j-<span class="number">1</span>]; j--)&#123;</span><br><span class="line">			swap(nums, j, j-<span class="number">1</span>);</span><br><span class="line">		&#125; </span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>算法分析：<br>最好情况O(n)-初始序列已经是升序: N-1次比较<br>最坏情况O($n^2$)-初始序列是降序(N-1)+(N-2)+…+1 ~ $N^2/2$次比较，$N^2/2$次交换<br>平均情况O($n^2$)-每个nums[i]都向前移动一半到nums[i/2] ~ $N^2/4$次比较，$N^2/4$次交换<br>空间复杂度O(1)<br>特点：稳定排序(因为插入的过程中都是从后向前进行查找，遇到小于等于(或大于等于)的数停止寻找，进行插入操作。不改变排序前后相等数值的相对顺序)<br>😁优点：不占用额外的内存空间<br>😢缺点：时复大<br>💡应用场景：数据规模较小或者部分数组已排序，且对内存空间有限制时</p>
+<p>【优化1】插入排序+二分查找：通过二分查找快速找到插入位置，减少比较次数<br>比较次数降为O($logn$)，交换次数仍为O($n^2$)</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">binaryInsertSort</span><span class="params">(<span class="keyword">int</span>[] nums)</span></span>&#123;</span><br><span class="line">	<span class="keyword">int</span> N = nums.length;</span><br><span class="line">	<span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">1</span>; i &lt; N; i++)&#123;</span><br><span class="line">		<span class="keyword">int</span> val = nums[i];</span><br><span class="line">		<span class="keyword">if</span>(nums[i] &lt; nums[i-<span class="number">1</span>])&#123;</span><br><span class="line">			<span class="comment">//二分法求插入位置</span></span><br><span class="line">			<span class="keyword">int</span> idx = binarySearch(nums, i); </span><br><span class="line">			<span class="comment">//将插入位置到i-1的数向后移动一位</span></span><br><span class="line">			<span class="keyword">for</span>(<span class="keyword">int</span> j = i; j &gt; idx; j--)&#123; nums[j] = nums[j-<span class="number">1</span>]; &#125;</span><br><span class="line">			nums[idx] = val;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">int</span> <span class="title">binarySearch</span><span class="params">(<span class="keyword">int</span>[] nums, <span class="keyword">int</span> n)</span></span>&#123;</span><br><span class="line">	<span class="keyword">int</span> l = <span class="number">0</span>;</span><br><span class="line">	<span class="keyword">int</span> r = n-<span class="number">1</span>;</span><br><span class="line">	<span class="keyword">int</span> target = nums[n];</span><br><span class="line">	<span class="keyword">while</span>(l &lt;= r)&#123;</span><br><span class="line">		<span class="keyword">int</span> m = l + (r - l) / <span class="number">2</span>;</span><br><span class="line">		<span class="keyword">if</span>(nums[m] &lt; target) l = m + <span class="number">1</span>;</span><br><span class="line">		<span class="keyword">else</span> <span class="keyword">if</span>(nums[m] &gt; target) r = m - <span class="number">1</span>;</span><br><span class="line">		<span class="keyword">else</span> <span class="keyword">return</span> m+<span class="number">1</span>;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span> l;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>【优化2】希尔排序Shell Sort：增加比较间隔-分治思想：对子序列排序→整个序列有序<br>插入排序的缺点是一次只换一个位置，希尔排序一次可以移动大于1的位置，时复减小。1959年Shell发明，第一个突破O($n^2$)的排序算法。</p>
+<p>希尔排序采用分治思想(Divide and Conquer)，先将整个序列分割成若干小的子序列，再分别对子序列进行直接插入排序，使得原来序列成为基本有序。这样通过对较小的序列进行插入排序，然后对基本有序的数列进行插入排序，能够提高插入排序算法的效率。其核心在于<strong>间隔</strong>序列的设定。</p>
+<p><img src="/images/algo/shell_sort.gif" alt="shell_sort.gif"></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">shellSort</span><span class="params">(<span class="keyword">int</span>[] nums)</span></span>&#123;</span><br><span class="line">	<span class="keyword">int</span> N = nums.length;</span><br><span class="line">	<span class="keyword">int</span> dist = <span class="number">1</span>;</span><br><span class="line">	<span class="keyword">while</span>(dist &lt; N/<span class="number">3</span>)&#123; dist = dist*<span class="number">3</span>+<span class="number">1</span>; &#125; <span class="comment">//间隔为...40，13，4，1</span></span><br><span class="line"></span><br><span class="line">	<span class="keyword">while</span>(dist &gt;= <span class="number">1</span>)&#123;</span><br><span class="line">		insertionSort(nums, N, dist);</span><br><span class="line">		dist = dist / <span class="number">3</span>;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">insertionSort</span><span class="params">(<span class="keyword">int</span>[] nums, <span class="keyword">int</span> N, <span class="keyword">int</span> dist)</span></span>&#123;</span><br><span class="line">	<span class="comment">// 0~i-1为有序区，i~N-1为无序区</span></span><br><span class="line">	<span class="keyword">for</span>(<span class="keyword">int</span> i = dist; i &lt; N; i++)&#123;</span><br><span class="line">		<span class="keyword">for</span>(<span class="keyword">int</span> j = i; j &gt;= dist &amp;&amp; nums[j] &lt; nums[j-dist]; j -= dist)&#123;</span><br><span class="line">			swap(nums, j, j-dist);</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>算法分析：<br>最好情况O(n)-初始序列已经是升序: N-1次比较<br>最坏情况：O($nlogn$)<br>平均情况：O($nlogn$)<br>增量选取：希尔排序的时间复杂度与增量选取有关，但现今没有人能找出希尔排序的精确下界。<br>特点：不稳定排序(因为在进行分组时，相同元素可能分到不同组中，改变相同元素的相对顺序)<br>💡应用场景：希尔排序在最坏的情况下和平均情况下执行效率相差不是很多，与此同时快速排序（O(logn)）在最坏的情况下执行的效率会非常差。专家们提倡，<strong>几乎任何排序工作在开始时都可以用希尔排序</strong>，若在实际使用中证明它不够快，再改成快速排序这样更高级的排序算法.</p>
+<p>【优化3】希尔排序+二分查找：通过二分查找快速找到插入位置，减少比较次数</p>
+<h2 id="合并排序Merge-sort"><a href="#合并排序Merge-sort" class="headerlink" title="合并排序Merge sort"></a>合并排序Merge sort</h2><h3 id="递归-top-down-recursion"><a href="#递归-top-down-recursion" class="headerlink" title="递归(top-down)-recursion"></a>递归(top-down)-recursion</h3><p><img src="/images/algo/merge_sort_recursive.png" alt="merge_sort_recursive.png"></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">int</span>[] mergeSort(<span class="keyword">int</span>[] nums)&#123;</span><br><span class="line">	<span class="keyword">int</span>[] temp = <span class="keyword">new</span> <span class="keyword">int</span>[nums.length];</span><br><span class="line">	<span class="comment">// helper function</span></span><br><span class="line">	sort(nums, <span class="number">0</span>, nums.length-<span class="number">1</span>, temp);</span><br><span class="line">	<span class="keyword">return</span> nums;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">sort</span><span class="params">(<span class="keyword">int</span>[] nums, <span class="keyword">int</span> lo, <span class="keyword">int</span> hi, <span class="keyword">int</span>[] temp)</span></span>&#123;</span><br><span class="line">	<span class="keyword">if</span>(lo &gt;= hi) <span class="keyword">return</span>;</span><br><span class="line">	<span class="keyword">int</span> mid = lo + (hi - lo) / <span class="number">2</span>;</span><br><span class="line">	sort(nums, lo, mid, temp);</span><br><span class="line">	sort(nums, mid+<span class="number">1</span>, hi, temp);</span><br><span class="line">	merge(nums, lo, hi, temp);</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">merge</span><span class="params">(<span class="keyword">int</span>[] nums, <span class="keyword">int</span> lo, <span class="keyword">int</span> hi, <span class="keyword">int</span>[] temp)</span></span>&#123;</span><br><span class="line">	<span class="keyword">int</span> mid = lo + (hi - lo) / <span class="number">2</span>;</span><br><span class="line">	<span class="keyword">int</span> i = lo;</span><br><span class="line">	<span class="keyword">int</span> j = mid+<span class="number">1</span>;</span><br><span class="line">	<span class="keyword">int</span> k = lo;</span><br><span class="line">	<span class="keyword">while</span>(i &lt;= mid &amp;&amp; j &lt;= hi)&#123;</span><br><span class="line">		<span class="keyword">if</span>(nums[i] &lt; nums[j])&#123; temp[k++] = nums[i++]; &#125;</span><br><span class="line">		<span class="keyword">else</span>&#123; temp[k++] = nums[j++]; &#125;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">while</span>(i &lt;= mid)&#123; temp[k++] = nums[i++]; &#125;</span><br><span class="line">	<span class="keyword">while</span>(j &lt;= hi)&#123; temp[k++] = nums[j++]; &#125;</span><br><span class="line">	<span class="comment">// copy back to original array</span></span><br><span class="line">	<span class="keyword">for</span>(<span class="keyword">int</span> p = lo; p &lt;= hi; p++)&#123;</span><br><span class="line">		nums[p] = temp[p];</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>算法分析：<br>最好情况O($nlogn$)-初始序列已经是升序: $(nlogn)/2$次比较<br>最坏情况：O($nlogn$)<br>平均情况：O($nlogn$)<br>时间复杂度：O($nlogn$)；空间复杂度O(n)(其中递归需要logn)<br>特点：稳定排序，任何情况都保证时复为O(nlogn)</p>
+<p>【优化1】交换sort()里的数组，省去merge()里复制数组的步骤</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">sort</span><span class="params">(<span class="keyword">int</span>[] nums, <span class="keyword">int</span> lo, <span class="keyword">int</span> hi, <span class="keyword">int</span>[] temp)</span></span>&#123;</span><br><span class="line">	<span class="keyword">if</span>(lo &gt;= hi) <span class="keyword">return</span>;</span><br><span class="line">	<span class="keyword">int</span> mid = lo + (hi - lo) / <span class="number">2</span>;</span><br><span class="line">	sort(temp, lo, mid, nums);</span><br><span class="line">	sort(temp, mid+<span class="number">1</span>, hi, nums);</span><br><span class="line">	merge(nums, lo, hi, temp);</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">merge</span><span class="params">(<span class="keyword">int</span>[] nums, <span class="keyword">int</span> lo, <span class="keyword">int</span> hi, <span class="keyword">int</span>[] temp)</span></span>&#123;</span><br><span class="line">	<span class="keyword">int</span> mid = lo + (hi - lo) / <span class="number">2</span>;</span><br><span class="line">	<span class="keyword">int</span> i = lo;</span><br><span class="line">	<span class="keyword">int</span> j = mid+<span class="number">1</span>;</span><br><span class="line">	<span class="keyword">int</span> k = lo;</span><br><span class="line">	<span class="keyword">while</span>(i &lt;= mid &amp;&amp; j &lt;= hi)&#123;</span><br><span class="line">		<span class="keyword">if</span>(nums[i] &lt; nums[j])&#123; temp[k++] = nums[i++]; &#125;</span><br><span class="line">		<span class="keyword">else</span>&#123; temp[k++] = nums[j++]; &#125;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">while</span>(i &lt;= mid)&#123; temp[k++] = nums[i++]; &#125;</span><br><span class="line">	<span class="keyword">while</span>(j &lt;= hi)&#123; temp[k++] = nums[j++]; &#125;</span><br><span class="line">	</span><br><span class="line">	<span class="comment">// no need for copying</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>【优化2】若前半和后半sort完，整体已经是sorted，则不用再merge<br>O(n): n-1次比较， why?</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">sort</span><span class="params">(<span class="keyword">int</span>[] nums, <span class="keyword">int</span> lo, <span class="keyword">int</span> hi, <span class="keyword">int</span>[] temp)</span></span>&#123;</span><br><span class="line">	<span class="keyword">if</span>(lo &gt;= hi) <span class="keyword">return</span>;</span><br><span class="line">	<span class="keyword">int</span> mid = lo + (hi - lo) / <span class="number">2</span>;</span><br><span class="line">	sort(nums, lo, mid, temp);</span><br><span class="line">	sort(nums, mid+<span class="number">1</span>, hi, temp);</span><br><span class="line">	<span class="keyword">if</span>(nums[mid] &lt; nums[mid+<span class="number">1</span>]) <span class="keyword">return</span>; <span class="comment">//用前半的最后一个元素是否小于后半第一个元素来判断</span></span><br><span class="line">	merge(nums, lo, hi, temp);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>【优化3】对于小的数组用插入排序，减少空间占用</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">sort</span><span class="params">(<span class="keyword">int</span>[] nums, <span class="keyword">int</span> lo, <span class="keyword">int</span> hi, <span class="keyword">int</span>[] temp)</span></span>&#123;</span><br><span class="line">	<span class="keyword">if</span>(lo &gt;= hi) <span class="keyword">return</span>;</span><br><span class="line">	<span class="keyword">if</span>((hi - lo + <span class="number">1</span>) &lt;= CUTOFF)&#123;</span><br><span class="line">		insertionSort(nums, lo, hi);</span><br><span class="line">		<span class="keyword">return</span>;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">int</span> mid = lo + (hi - lo) / <span class="number">2</span>;</span><br><span class="line">	sort(nums, lo, mid, temp);</span><br><span class="line">	sort(nums, mid+<span class="number">1</span>, hi, temp);</span><br><span class="line">	merge(nums, lo, hi, temp);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="迭代-bottom-up-iterative"><a href="#迭代-bottom-up-iterative" class="headerlink" title="迭代(bottom-up)-iterative"></a>迭代(bottom-up)-iterative</h3><p><img src="/images/algo/merge_sort_iterative.png" alt="merge_sort_iterative.png"></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">int</span>[] mergeSort(<span class="keyword">int</span>[] nums)&#123;</span><br><span class="line">	<span class="keyword">int</span> N = nums.length;</span><br><span class="line">	<span class="keyword">int</span>[] temp = <span class="keyword">new</span> <span class="keyword">int</span>[N];</span><br><span class="line">	<span class="keyword">for</span>(<span class="keyword">int</span> sz = <span class="number">1</span>; sz &lt; N; sz *= <span class="number">2</span>)&#123;</span><br><span class="line">		<span class="keyword">for</span>(<span class="keyword">int</span> lo = <span class="number">0</span>; lo &lt; N-sz; lo += sz+sz)&#123;</span><br><span class="line">			merge(nums, lo, Math.min(lo+sz+sz-<span class="number">1</span>,N-<span class="number">1</span>), temp);</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span> nums;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">merge</span><span class="params">(<span class="keyword">int</span>[] nums, <span class="keyword">int</span> lo, <span class="keyword">int</span> hi, <span class="keyword">int</span>[] temp)</span></span>&#123;</span><br><span class="line">	<span class="keyword">int</span> mid = lo + (hi - lo) / <span class="number">2</span>;</span><br><span class="line">	<span class="keyword">int</span> i = lo;</span><br><span class="line">	<span class="keyword">int</span> j = mid+<span class="number">1</span>;</span><br><span class="line">	<span class="keyword">int</span> k = lo;</span><br><span class="line">	<span class="keyword">while</span>(i &lt;= mid &amp;&amp; j &lt;= hi)&#123;</span><br><span class="line">		<span class="keyword">if</span>(nums[i] &lt; nums[j])&#123; temp[k++] = nums[i++]; &#125;</span><br><span class="line">		<span class="keyword">else</span>&#123; temp[k++] = nums[j++]; &#125;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">while</span>(i &lt;= mid)&#123; temp[k++] = nums[i++]; &#125;</span><br><span class="line">	<span class="keyword">while</span>(j &lt;= hi)&#123; temp[k++] = nums[j++]; &#125;</span><br><span class="line">	<span class="comment">// copy back to original array</span></span><br><span class="line">	<span class="keyword">for</span>(<span class="keyword">int</span> p = lo; p &lt;= hi; p++)&#123;</span><br><span class="line">		nums[p] = temp[p];</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="快速排序Quick-sort"><a href="#快速排序Quick-sort" class="headerlink" title="快速排序Quick sort"></a>快速排序Quick sort</h2><p>选择pivot，比pivot小的排前面，比pivot大的排后面</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">int</span>[] quickSort(<span class="keyword">int</span>[] nums)&#123;</span><br><span class="line">	qsort(nums, <span class="number">0</span>, nums.length - <span class="number">1</span>);</span><br><span class="line">	<span class="keyword">return</span> nums;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">qsort</span><span class="params">(<span class="keyword">int</span>[] nums, <span class="keyword">int</span> lo, <span class="keyword">int</span> hi)</span></span>&#123;</span><br><span class="line">	<span class="keyword">if</span>(lo &gt;= hi) <span class="keyword">return</span>;</span><br><span class="line">	<span class="keyword">int</span> pivot = partition(nums, lo, hi);</span><br><span class="line">	qsort(nums, lo, pivot - <span class="number">1</span>);</span><br><span class="line">	qsort(nums, pivot + <span class="number">1</span>, hi);</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">int</span> <span class="title">partition</span><span class="params">(<span class="keyword">int</span>[] nums, <span class="keyword">int</span> lo, <span class="keyword">int</span> hi)</span></span>&#123;</span><br><span class="line">	<span class="keyword">int</span> pivot = nums[hi];</span><br><span class="line">	<span class="keyword">int</span> k = lo;</span><br><span class="line">	<span class="keyword">for</span>(<span class="keyword">int</span> i = lo; i &lt; hi; i++)&#123;</span><br><span class="line">		<span class="keyword">if</span>(nums[i] &lt; pivot)&#123;</span><br><span class="line">			swap(nums, k, i);</span><br><span class="line">			k++;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	swap(nums, k, hi);</span><br><span class="line">	<span class="keyword">return</span> k;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">swap</span><span class="params">(<span class="keyword">int</span>[] nums, <span class="keyword">int</span> i, <span class="keyword">int</span> j)</span></span>&#123; ... &#125;</span><br></pre></td></tr></table></figure>
+
+<p>算法分析：<br>最好情况O(nlogn)-每次选择的pivot都是中位数<br>最坏情况O(n^2)-每次选择的pivot都是最小/最大数<br>平均情况O(nlnn)</p>
+<p><img src="/images/algo/quick_sort.png" alt="quick_sort.png"></p>
+<p>特点：不稳定，但是只要不是worst case，时复O(nlogn)比merge sort的快<br>😁优点：不占用额外的内存空间(in-place算法)<br>😢缺点：若遇到worst case则时复高达O($n^2$)<br>💡应用场景：通常是最优解法</p>
+<h3 id="快速选择Quick-Select：常用于第k大-小的问题"><a href="#快速选择Quick-Select：常用于第k大-小的问题" class="headerlink" title="快速选择Quick Select：常用于第k大/小的问题"></a>快速选择Quick Select：常用于第k大/小的问题</h3><p>利用快速排序中当每个iteration结束，pivot的位置就是其最终已排序位置</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">findKthLargest</span><span class="params">(<span class="keyword">int</span>[] nums, <span class="keyword">int</span> k)</span></span>&#123;</span><br><span class="line">	k = nums.length - k; <span class="comment">//千万别忘了这句！！！若是findKthSmallest则省略这句</span></span><br><span class="line">	<span class="keyword">int</span> lo = <span class="number">0</span>;</span><br><span class="line">	<span class="keyword">int</span> hi = nums.length - <span class="number">1</span>;</span><br><span class="line">	<span class="keyword">while</span>(lo &lt; hi)&#123;</span><br><span class="line">		<span class="keyword">int</span> pivot = partition(nums, lo, hi);</span><br><span class="line">		<span class="keyword">if</span>(pivot == k) <span class="keyword">return</span> nums[k];</span><br><span class="line">		<span class="keyword">else</span> <span class="keyword">if</span>(pivot &lt; k) lo = pivot + <span class="number">1</span>;</span><br><span class="line">		<span class="keyword">else</span> hi = pivot - <span class="number">1</span>;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span> nums[k];</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">int</span> <span class="title">partition</span><span class="params">(<span class="keyword">int</span>[] nums, <span class="keyword">int</span> lo, <span class="keyword">int</span> hi)</span></span>&#123;</span><br><span class="line">	<span class="keyword">int</span> pivot = nums[hi];</span><br><span class="line">	<span class="keyword">int</span> k = lo;</span><br><span class="line">	<span class="keyword">for</span>(<span class="keyword">int</span> i = lo; i &lt; hi; i++)&#123;</span><br><span class="line">		<span class="keyword">if</span>(nums[i] &lt; pivot)&#123;</span><br><span class="line">			swap(nums, k, i);</span><br><span class="line">			k++;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	swap(nums, hi, k);</span><br><span class="line">	<span class="keyword">return</span> k;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">swap</span><span class="params">(<span class="keyword">int</span>[] nums, <span class="keyword">int</span> i, <span class="keyword">int</span> j)</span></span>&#123; ... &#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="荷兰国旗问题：优化quick-sort，使其支持duplicate-keys，3-way-partitioning"><a href="#荷兰国旗问题：优化quick-sort，使其支持duplicate-keys，3-way-partitioning" class="headerlink" title="荷兰国旗问题：优化quick sort，使其支持duplicate keys，3-way partitioning"></a>荷兰国旗问题：优化quick sort，使其支持duplicate keys，3-way partitioning</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">sort</span><span class="params">(<span class="keyword">int</span>[] nums)</span></span>&#123;</span><br><span class="line">	<span class="keyword">int</span> lo = <span class="number">0</span>;</span><br><span class="line">	<span class="keyword">int</span> hi = nums.length - <span class="number">1</span>;</span><br><span class="line">	<span class="keyword">int</span> p = <span class="number">0</span>;</span><br><span class="line">	<span class="keyword">while</span>(p &lt;= hi)&#123;</span><br><span class="line">		<span class="keyword">if</span>(nums[p] == <span class="number">0</span>)&#123;</span><br><span class="line">			swap(nums, p, lo);</span><br><span class="line">			lo++;</span><br><span class="line">			p++;</span><br><span class="line">		&#125;<span class="keyword">else</span> <span class="keyword">if</span>(nums[p] == <span class="number">2</span>)&#123;</span><br><span class="line">			swap(nums, p, hi);</span><br><span class="line">			hi--; <span class="comment">//因为不知道nums[hi]的大小，所以p和hi交换后，不进行p++</span></span><br><span class="line">		&#125;<span class="keyword">else</span>&#123;</span><br><span class="line">			p++;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="桶排序Bucket-sort：常用于top-k问题"><a href="#桶排序Bucket-sort：常用于top-k问题" class="headerlink" title="桶排序Bucket sort：常用于top k问题"></a>桶排序Bucket sort：常用于top k问题</h2><p>详见top k问题总结</p>
+<h2 id="堆排序Heap-sort"><a href="#堆排序Heap-sort" class="headerlink" title="堆排序Heap sort"></a>堆排序Heap sort</h2><p>推荐Youtube Back to Back SWE频道的讲解：<a href="https://www.youtube.com/watch?v=k72DtCnY4MU" target="_blank" rel="noopener">https://www.youtube.com/watch?v=k72DtCnY4MU</a><br>Binary Heap性质：k的父结点在k/2，子结点在2k+1和2k+2</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">int</span>[] heapSort(<span class="keyword">int</span>[] nums)&#123;</span><br><span class="line">	<span class="comment">//从nums的一半开始向前将元素按max heap的顺序重排，因为会swap所以不必从nums最后一元素向前遍历整个nums</span></span><br><span class="line">	<span class="keyword">int</span> n = nums.length - <span class="number">1</span>;</span><br><span class="line">	<span class="keyword">for</span>(<span class="keyword">int</span> i = (n-<span class="number">1</span>)/<span class="number">2</span>; i &gt;= <span class="number">0</span>; i--)&#123;</span><br><span class="line">		heapify(nums, n, i);</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="comment">//此时，max heap建立完成，root为最大的数</span></span><br><span class="line">	<span class="comment">//将heap的last node与root对调，移走last node，heap大小-1，重新排序</span></span><br><span class="line">	<span class="keyword">for</span>(<span class="keyword">int</span> i = n; i &gt;= <span class="number">0</span>; i--)&#123;</span><br><span class="line">		swap(nums, <span class="number">0</span>, i);</span><br><span class="line">		heapify(nums, i, <span class="number">0</span>);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">heapify</span><span class="params">(<span class="keyword">int</span>[] nums, <span class="keyword">int</span> n, <span class="keyword">int</span> i)</span></span>&#123;</span><br><span class="line">	<span class="keyword">int</span> max = i;</span><br><span class="line">	<span class="keyword">int</span> l = <span class="number">2</span> * i + <span class="number">1</span>;</span><br><span class="line">	<span class="keyword">int</span> r = <span class="number">2</span> * i + <span class="number">2</span>;</span><br><span class="line">	<span class="keyword">if</span>(l &lt; n &amp;&amp; nums[l] &gt; nums[max]) max = l;</span><br><span class="line">	<span class="keyword">if</span>(r &lt; n &amp;&amp; nums[r] &gt; nums[max]) max = r;</span><br><span class="line">	<span class="keyword">if</span>(max != i)&#123;</span><br><span class="line">		swap(nums, max, i);</span><br><span class="line">		heapify(nums, n, max);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">swap</span><span class="params">(<span class="keyword">int</span>[] nums, <span class="keyword">int</span> i, <span class="keyword">int</span> j)</span></span>&#123; ... &#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="Java里Arrays-sort-的实现"><a href="#Java里Arrays-sort-的实现" class="headerlink" title="Java里Arrays.sort()的实现"></a>Java里Arrays.sort()的实现</h2><p>sort reference类型时，用merge sort。因为稳定，且保证时复O(nlogn)<br>sort primitive类型时，用quick sort。因为quick sort在实际应用中用的内存更少、更快</p>
+
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/tags/">Tags</a></li>
+        
+      </ul>
+    </div>
+
+    <div id="toc-footer" style="display: none">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#相关概念"><span class="toc-number">1.</span> <span class="toc-text">相关概念</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#选择排序Selection-Sort"><span class="toc-number">2.</span> <span class="toc-text">选择排序Selection Sort</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#插入排序Insertion-Sort"><span class="toc-number">3.</span> <span class="toc-text">插入排序Insertion Sort</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#合并排序Merge-sort"><span class="toc-number">4.</span> <span class="toc-text">合并排序Merge sort</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#递归-top-down-recursion"><span class="toc-number">4.1.</span> <span class="toc-text">递归(top-down)-recursion</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#迭代-bottom-up-iterative"><span class="toc-number">4.2.</span> <span class="toc-text">迭代(bottom-up)-iterative</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#快速排序Quick-sort"><span class="toc-number">5.</span> <span class="toc-text">快速排序Quick sort</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#快速选择Quick-Select：常用于第k大-小的问题"><span class="toc-number">5.1.</span> <span class="toc-text">快速选择Quick Select：常用于第k大&#x2F;小的问题</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#荷兰国旗问题：优化quick-sort，使其支持duplicate-keys，3-way-partitioning"><span class="toc-number">5.2.</span> <span class="toc-text">荷兰国旗问题：优化quick sort，使其支持duplicate keys，3-way partitioning</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#桶排序Bucket-sort：常用于top-k问题"><span class="toc-number">6.</span> <span class="toc-text">桶排序Bucket sort：常用于top k问题</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#堆排序Heap-sort"><span class="toc-number">7.</span> <span class="toc-text">堆排序Heap sort</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Java里Arrays-sort-的实现"><span class="toc-number">8.</span> <span class="toc-text">Java里Arrays.sort()的实现</span></a></li></ol>
+    </div>
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=http://yoursite.com/2020/08/31/%E6%8E%92%E5%BA%8F-%E5%BF%AB%E9%80%9F%E9%80%89%E6%8B%A9-%E8%8D%B7%E5%85%B0%E5%9B%BD%E6%97%97%E9%97%AE%E9%A2%98/" target="_blank" rel="noopener"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=http://yoursite.com/2020/08/31/%E6%8E%92%E5%BA%8F-%E5%BF%AB%E9%80%9F%E9%80%89%E6%8B%A9-%E8%8D%B7%E5%85%B0%E5%9B%BD%E6%97%97%E9%97%AE%E9%A2%98/&text=排序总结、快速选择、荷兰国旗问题" target="_blank" rel="noopener"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=http://yoursite.com/2020/08/31/%E6%8E%92%E5%BA%8F-%E5%BF%AB%E9%80%9F%E9%80%89%E6%8B%A9-%E8%8D%B7%E5%85%B0%E5%9B%BD%E6%97%97%E9%97%AE%E9%A2%98/&title=排序总结、快速选择、荷兰国旗问题" target="_blank" rel="noopener"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=http://yoursite.com/2020/08/31/%E6%8E%92%E5%BA%8F-%E5%BF%AB%E9%80%9F%E9%80%89%E6%8B%A9-%E8%8D%B7%E5%85%B0%E5%9B%BD%E6%97%97%E9%97%AE%E9%A2%98/&is_video=false&description=排序总结、快速选择、荷兰国旗问题" target="_blank" rel="noopener"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=排序总结、快速选择、荷兰国旗问题&body=Check out this article: http://yoursite.com/2020/08/31/%E6%8E%92%E5%BA%8F-%E5%BF%AB%E9%80%9F%E9%80%89%E6%8B%A9-%E8%8D%B7%E5%85%B0%E5%9B%BD%E6%97%97%E9%97%AE%E9%A2%98/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=http://yoursite.com/2020/08/31/%E6%8E%92%E5%BA%8F-%E5%BF%AB%E9%80%9F%E9%80%89%E6%8B%A9-%E8%8D%B7%E5%85%B0%E5%9B%BD%E6%97%97%E9%97%AE%E9%A2%98/&title=排序总结、快速选择、荷兰国旗问题" target="_blank" rel="noopener"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=http://yoursite.com/2020/08/31/%E6%8E%92%E5%BA%8F-%E5%BF%AB%E9%80%9F%E9%80%89%E6%8B%A9-%E8%8D%B7%E5%85%B0%E5%9B%BD%E6%97%97%E9%97%AE%E9%A2%98/&title=排序总结、快速选择、荷兰国旗问题" target="_blank" rel="noopener"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=http://yoursite.com/2020/08/31/%E6%8E%92%E5%BA%8F-%E5%BF%AB%E9%80%9F%E9%80%89%E6%8B%A9-%E8%8D%B7%E5%85%B0%E5%9B%BD%E6%97%97%E9%97%AE%E9%A2%98/&title=排序总结、快速选择、荷兰国旗问题" target="_blank" rel="noopener"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=http://yoursite.com/2020/08/31/%E6%8E%92%E5%BA%8F-%E5%BF%AB%E9%80%9F%E9%80%89%E6%8B%A9-%E8%8D%B7%E5%85%B0%E5%9B%BD%E6%97%97%E9%97%AE%E9%A2%98/&title=排序总结、快速选择、荷兰国旗问题" target="_blank" rel="noopener"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=http://yoursite.com/2020/08/31/%E6%8E%92%E5%BA%8F-%E5%BF%AB%E9%80%9F%E9%80%89%E6%8B%A9-%E8%8D%B7%E5%85%B0%E5%9B%BD%E6%97%97%E9%97%AE%E9%A2%98/&name=排序总结、快速选择、荷兰国旗问题&description=" target="_blank" rel="noopener"><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://news.ycombinator.com/submitlink?u=http://yoursite.com/2020/08/31/%E6%8E%92%E5%BA%8F-%E5%BF%AB%E9%80%9F%E9%80%89%E6%8B%A9-%E8%8D%B7%E5%85%B0%E5%9B%BD%E6%97%97%E9%97%AE%E9%A2%98/&t=排序总结、快速选择、荷兰国旗问题" target="_blank" rel="noopener"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2020-2022
+    xiammiii
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/tags/">Tags</a></li>
+        
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+
+<link rel="stylesheet" href="/lib/justified-gallery/css/justifiedGallery.min.css">
+
+
+    <!-- jquery -->
+
+<script src="/lib/jquery/jquery.min.js"></script>
+
+
+<script src="/lib/justified-gallery/js/jquery.justifiedGallery.min.js"></script>
+
+<!-- clipboard -->
+
+  
+<script src="/lib/clipboard/clipboard.min.js"></script>
+
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"Copy to clipboard!\">";
+    btn += '<i class="far fa-clone"></i>';
+    btn += '</span>'; 
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "Copied!");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Google Analytics -->
+
+<!-- Baidu Analytics -->
+
+<!-- Disqus Comments -->
+
+
+</body>
+</html>
