@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="背景知识  objdump -t bomb: 查看符号表(symbol table)。符号表是一种用于语言翻译器（例如编译器和解释器）中的数据结构。在符号表中，程序源代码中的每个标识符都和它的声明或使用信息绑定在一起，比如其数据类型、作用域以及内存地址。objdump -d bomb: 反汇编bombgdb bomb: 启动GNU Debuggerbreak &lt;location&gt;: 设">
+<meta property="og:type" content="article">
+<meta property="og:title" content="CMU15213 Lab2 Bomb lab">
+<meta property="og:url" content="https://xiameng97hz.github.io/2021/01/29/CMU15213-Lab2-Bomb-lab/index.html">
+<meta property="og:site_name" content="xiameng">
+<meta property="og:description" content="背景知识  objdump -t bomb: 查看符号表(symbol table)。符号表是一种用于语言翻译器（例如编译器和解释器）中的数据结构。在符号表中，程序源代码中的每个标识符都和它的声明或使用信息绑定在一起，比如其数据类型、作用域以及内存地址。objdump -d bomb: 反汇编bombgdb bomb: 启动GNU Debuggerbreak &lt;location&gt;: 设">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://xiameng97hz.github.io/images/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%B3%BB%E7%BB%9F/phase1-1.png">
+<meta property="og:image" content="https://xiameng97hz.github.io/images/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%B3%BB%E7%BB%9F/phase1-2.png">
+<meta property="og:image" content="https://xiameng97hz.github.io/images/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%B3%BB%E7%BB%9F/phase1-3.png">
+<meta property="og:image" content="https://xiameng97hz.github.io/images/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%B3%BB%E7%BB%9F/phase1-4.png">
+<meta property="og:image" content="https://xiameng97hz.github.io/images/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%B3%BB%E7%BB%9F/phase2.png">
+<meta property="og:image" content="https://xiameng97hz.github.io/images/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%B3%BB%E7%BB%9F/phase3.png">
+<meta property="og:image" content="https://xiameng97hz.github.io/images/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%B3%BB%E7%BB%9F/phase4-1.png">
+<meta property="og:image" content="https://xiameng97hz.github.io/images/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%B3%BB%E7%BB%9F/phase4-2.png">
+<meta property="og:image" content="https://xiameng97hz.github.io/images/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%B3%BB%E7%BB%9F/phase5-1.png">
+<meta property="og:image" content="https://xiameng97hz.github.io/images/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%B3%BB%E7%BB%9F/phase5-2.png">
+<meta property="og:image" content="https://xiameng97hz.github.io/images/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%B3%BB%E7%BB%9F/phase5-3.png">
+<meta property="og:image" content="https://xiameng97hz.github.io/images/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%B3%BB%E7%BB%9F/phase5-4.png">
+<meta property="og:image" content="https://xiameng97hz.github.io/images/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%B3%BB%E7%BB%9F/phase6-1.png">
+<meta property="og:image" content="https://xiameng97hz.github.io/images/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%B3%BB%E7%BB%9F/phase6-2.png">
+<meta property="og:image" content="https://xiameng97hz.github.io/images/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%B3%BB%E7%BB%9F/phase6-3.png">
+<meta property="og:image" content="https://xiameng97hz.github.io/images/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%B3%BB%E7%BB%9F/phase6-4.png">
+<meta property="og:image" content="https://xiameng97hz.github.io/images/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%B3%BB%E7%BB%9F/phase6-5.png">
+<meta property="og:image" content="https://xiameng97hz.github.io/images/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%B3%BB%E7%BB%9F/phase6-6.png">
+<meta property="og:image" content="https://xiameng97hz.github.io/images/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%B3%BB%E7%BB%9F/result.png">
+<meta property="article:published_time" content="2021-01-30T03:41:59.000Z">
+<meta property="article:modified_time" content="2024-06-29T03:04:35.342Z">
+<meta property="article:author" content="xiameng">
+<meta property="article:tag" content="计算机系统">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://xiameng97hz.github.io/images/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%B3%BB%E7%BB%9F/phase1-1.png">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>CMU15213 Lab2 Bomb lab</title>
+    <!-- async scripts -->
+    <!-- Google Analytics -->
+
+
+    <!-- Umami Analytics -->
+
+
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+<meta name="generator" content="Hexo 7.2.0"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="Menu"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="Menu"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="Top" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fa-solid fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        <!--
+       --><li><a href="/">Home</a></li><!--
+     --><!--
+       --><li><a href="/tags/">Tag</a></li><!--
+     --><!--
+       --><li><a href="/archives/">Writing</a></li><!--
+     -->
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" aria-label="Previous post" href="/2021/02/15/2020%E5%B9%B4%E7%BB%88%E6%80%BB%E7%BB%93%E2%80%94%E2%80%94%E8%87%AA%E6%88%91%E7%9A%84%E5%B4%A9%E5%A1%8C%E4%B8%8E%E9%87%8D%E5%BB%BA/"><i class="fa-solid fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" aria-label="Next post" href="/2020/12/29/12%E6%9C%88%E8%8B%B1%E8%AF%AD%E5%AD%A6%E4%B9%A0%E2%80%94%E2%80%94TED%E6%BC%94%E8%AE%B2/"><i class="fa-solid fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="Back to top" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="Share post" href="#"><i class="fa-solid fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://xiameng97hz.github.io/2021/01/29/CMU15213-Lab2-Bomb-lab/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://xiameng97hz.github.io/2021/01/29/CMU15213-Lab2-Bomb-lab/&text=CMU15213 Lab2 Bomb lab"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://xiameng97hz.github.io/2021/01/29/CMU15213-Lab2-Bomb-lab/&title=CMU15213 Lab2 Bomb lab"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://xiameng97hz.github.io/2021/01/29/CMU15213-Lab2-Bomb-lab/&is_video=false&description=CMU15213 Lab2 Bomb lab"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=CMU15213 Lab2 Bomb lab&body=Check out this article: https://xiameng97hz.github.io/2021/01/29/CMU15213-Lab2-Bomb-lab/"><i class="fa-solid fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://xiameng97hz.github.io/2021/01/29/CMU15213-Lab2-Bomb-lab/&title=CMU15213 Lab2 Bomb lab"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://xiameng97hz.github.io/2021/01/29/CMU15213-Lab2-Bomb-lab/&title=CMU15213 Lab2 Bomb lab"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://xiameng97hz.github.io/2021/01/29/CMU15213-Lab2-Bomb-lab/&title=CMU15213 Lab2 Bomb lab"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://xiameng97hz.github.io/2021/01/29/CMU15213-Lab2-Bomb-lab/&title=CMU15213 Lab2 Bomb lab"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://xiameng97hz.github.io/2021/01/29/CMU15213-Lab2-Bomb-lab/&name=CMU15213 Lab2 Bomb lab&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://xiameng97hz.github.io/2021/01/29/CMU15213-Lab2-Bomb-lab/&t=CMU15213 Lab2 Bomb lab"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    
+    
+      <div id="toc">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link"><span class="toc-number">1.</span> <span class="toc-text">背景知识</span></a></li><li class="toc-item toc-level-2"><a class="toc-link"><span class="toc-number">2.</span> <span class="toc-text">Tips</span></a></li><li class="toc-item toc-level-2"><a class="toc-link"><span class="toc-number">3.</span> <span class="toc-text">Phase 1</span></a></li><li class="toc-item toc-level-2"><a class="toc-link"><span class="toc-number">4.</span> <span class="toc-text">Phase 2</span></a></li><li class="toc-item toc-level-2"><a class="toc-link"><span class="toc-number">5.</span> <span class="toc-text">Phase 3</span></a></li><li class="toc-item toc-level-2"><a class="toc-link"><span class="toc-number">6.</span> <span class="toc-text">Phase 4</span></a></li><li class="toc-item toc-level-2"><a class="toc-link"><span class="toc-number">7.</span> <span class="toc-text">Phase 5</span></a></li><li class="toc-item toc-level-2"><a class="toc-link"><span class="toc-number">8.</span> <span class="toc-text">Phase 6</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link"><span class="toc-number">8.1.</span> <span class="toc-text">第1段</span></a></li><li class="toc-item toc-level-3"><a class="toc-link"><span class="toc-number">8.2.</span> <span class="toc-text">第2段</span></a></li><li class="toc-item toc-level-3"><a class="toc-link"><span class="toc-number">8.3.</span> <span class="toc-text">第3段</span></a></li><li class="toc-item toc-level-3"><a class="toc-link"><span class="toc-number">8.4.</span> <span class="toc-text">第4段</span></a></li><li class="toc-item toc-level-3"><a class="toc-link"><span class="toc-number">8.5.</span> <span class="toc-text">第5段</span></a></li><li class="toc-item toc-level-3"><a class="toc-link"><span class="toc-number">8.6.</span> <span class="toc-text">总和</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link"><span class="toc-number">9.</span> <span class="toc-text">结果</span></a></li><li class="toc-item toc-level-2"><a class="toc-link"><span class="toc-number">10.</span> <span class="toc-text">参考资料</span></a></li></ol>
+      </div>
+    
+  </span>
+</div>
+
+    
+    <div class="content index py4 ">
+        
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle p-name" itemprop="name headline">
+        CMU15213 Lab2 Bomb lab
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author p-author h-card" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span class="p-name" itemprop="name">xiameng</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2021-01-30T03:41:59.000Z" class="dt-published" itemprop="datePublished">2021-01-29</time>
+        
+      
+    </div>
+
+
+      
+
+      
+    <div class="article-tag">
+        <i class="fa-solid fa-tag"></i>
+        <a class="p-category" href="/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%B3%BB%E7%BB%9F/" rel="tag">计算机系统</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content e-content" itemprop="articleBody">
+    <h2>背景知识</h2>
+
+<p><code>objdump -t bomb</code>: 查看符号表(symbol table)。符号表是一种用于语言翻译器（例如编译器和解释器）中的数据结构。在符号表中，程序源代码中的每个标识符都和它的声明或使用信息绑定在一起，比如其数据类型、作用域以及内存地址。<br><code>objdump -d bomb</code>: 反汇编bomb<br><code>gdb bomb</code>: 启动GNU Debugger<br><code>break &lt;location&gt;</code>: 设置断点<br><code>run &lt;args&gt;</code>: 运行程序，args作为参数<br><code>disas &lt;func&gt;</code>: 反编译disassemble<br><code>info registers</code>: 打印每个寄存器中的hex值<br><code>print (/x or /d) $register</code>: 打印%rsp中的hex或decimal值<br><code>x $register</code> &#x2F; <code>x 0xaddress</code>: 打印寄存器或该地址中的值<br><code>stepi</code> &#x2F; <code>nexti</code>: 前进一步</p>
+<h2>Tips</h2>
+在成功破解一个炸弹后，将答案放入新建的text文件answer.txt（自定义文件名）中，每个答案单独放一行，最后多打一个回车。这样在破解下一个炸弹时，直接gdb模式下执行r answer.txt便可自动跳过已破解的炸弹，节省时间。
+
+<h2>Phase 1</h2>
+objdump -d bomb > bomb.s反汇编二进制可执行文件bomb，并将输出保存到bomb.s中。打开bomb.s并搜索关键字explode_bomb可以看到，该串关键字第一次出现在phase_1函数中。并且在explode_bomb前还调用了strings_not_equal，当我们输入的字符串匹配时，400ef0指令返回true，stack pointer跳到400ef7，不会触发explode_bomb函数。
+
+<p><img src="/images/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%B3%BB%E7%BB%9F/phase1-1.png" alt="phase1-1"></p>
+<p>了解phase_1函数的逻辑后，gdb bomb进入gdb调试模式。首先设置断点，为防止炸弹爆炸，每次在运行gdb时都要先在explode_bomb函数处设置断点：break explode_bomb。</p>
+<p>依据x86-64 Architecture Guide，每个寄存器的用途如下表。</p>
+<p><img src="/images/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%B3%BB%E7%BB%9F/phase1-2.png" alt="phase1-2"></p>
+<p>phase_1函数中400ee4指令让%rsi保存$0x402400，即为strings_not_equal函数的第二个参数，因此很容易想到该函数第一个参数%rdi存的应是用户输入字符串的地址。这样的话，我们通过打印地址0x402400指向的字符串便可知道phase_1应该输入是Border relations with Canada have never been better.了。</p>
+<p><img src="/images/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%B3%BB%E7%BB%9F/phase1-3.png" alt="phase1-3"></p>
+<p>还有一个奇技淫巧解除phase 1的炸弹。在退出gdb模式的情况下，命令行输入strings bomb查看bomb中所有可输出的字符串。其中下面这一段字符串是我们会用到的，从中提取看起来可能是用于解除炸弹的字符串。</p>
+<p><img src="/images/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%B3%BB%E7%BB%9F/phase1-4.png" alt="phase1-4"></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">Border relations with Canada have never been better.</span><br><span class="line">flyers</span><br><span class="line">maduiersnfotvbyl</span><br><span class="line">%d %d %d %d %d %d: 有一行输入是6个数字</span><br><span class="line">%d %d %s：有一行输入是2个数字和一个字符串</span><br><span class="line">DrEvil</span><br><span class="line">%s %d %[a-zA-z ]</span><br><span class="line">csapp</span><br><span class="line">;*3$&quot;</span><br></pre></td></tr></table></figure>
+
+<p>重新进入gdb模式并在explode_bomb和phase_1处设置断点，输入第一个候补字符串Border relations with Canada have never been better.后发现成功解除第一个炸弹！</p>
+<h2>Phase 2</h2>
+phase 2调用的是read_six_numbers函数，说明要输入6个数字。
+
+<p><img src="/images/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%B3%BB%E7%BB%9F/phase2.png" alt="phase2"></p>
+<p>我们观察读取数字后的指令。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">400f0a和400f0e: 若(%rsp)不等于1，则触发炸弹，若等于1，则跳到400f30</span><br><span class="line"><span class="meta prompt_">	-&gt; </span><span class="language-bash">第一个数字为1</span></span><br><span class="line">400f30:         %rbx = %rsp + 4</span><br><span class="line">400f35:         %rbp = %rsp + 24</span><br><span class="line">400f3a:         跳回400f17</span><br><span class="line">400f17:         %eax = (%rbx - 4) = (%rsp)</span><br><span class="line">400f1a:         %eax += %eax</span><br><span class="line">400f1c和400f1e: 拿%eax与(%rbx)比较，也就是拿第一个数字的两倍与第二个数字作比较，</span><br><span class="line">					      若不相等，则触发炸弹，若相等，则跳到400f25</span><br><span class="line">400f25:         %rbx = %rbx + 4 = %rsp + 8</span><br><span class="line">400f29:         拿%rbp与%rbx比较，若不相等，则跳回400f17</span><br><span class="line"><span class="meta prompt_">	-&gt; </span><span class="language-bash">循环判断是否满足：第n个数字 = 第n-1个数字的两倍</span></span><br></pre></td></tr></table></figure>
+
+<p>因此，phase 2的输入应为1 2 4 8 16 32。</p>
+<h2>Phase 3</h2>
+
+<p><img src="/images/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%B3%BB%E7%BB%9F/phase3.png" alt="phase3"></p>
+<p>phase 3有三个可能引爆炸弹的地方。第一处炸弹(400f65)是当用户输入不符合格式要求时。由于我们知道sscanf函数签名为int sscanf ( const char * s, const char * format, …);，存第二个参数的%rsi存的是输入格式。通过在400f56设置断点并打印%rsi，可知phase 3应输入两个数字。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">(gdb) break *0x400f56</span><br><span class="line">Breakpoint 2 at 0x400f56</span><br><span class="line">(gdb) run</span><br><span class="line">Breakpoint 2, 0x0000000000400f56 in phase_3 ()</span><br><span class="line">(gdb) print (char *)$rsi</span><br><span class="line"><span class="meta prompt_">$</span><span class="language-bash">2 = 0x4025cf <span class="string">&quot;%d %d&quot;</span></span></span><br></pre></td></tr></table></figure>
+
+<p>依据400f6a和400f6f指令，第二处炸弹(400fad)是当(%rsp + 8) &gt; 7时引爆，说明输入的第一个数必须 ≤ 7。从400f71到400fab可以看出，该段代码的逻辑是根据%rax的值跳到不同地址来执行命令，上层也就是switch语句。假设第一个数为0，则会进入400f7c分支，%eax赋值为0xcf，跳到400fbe后，比较%eax与输入的第二个数，若不相等，则引爆第三处炸弹。因此phase 3其中一个解是0 207。</p>
+<h2>Phase 4</h2>
+
+<p><img src="/images/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%B3%BB%E7%BB%9F/phase4-1.png" alt="phase4-1"></p>
+<p>与phase 3同理，通过在40101f设置断点并打印%rsi，可知phase 4应输入两个数字。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">(gdb) break *0x40101f</span><br><span class="line">Breakpoint 2 at 0x40101f</span><br><span class="line">(gdb) run</span><br><span class="line">Breakpoint 2, 0x000000000040101f in phase_4 ()</span><br><span class="line">(gdb) print (char *)$rsi</span><br><span class="line"><span class="meta prompt_">$</span><span class="language-bash">2 = 0x4025cf <span class="string">&quot;%d %d&quot;</span></span></span><br></pre></td></tr></table></figure>
+
+<p>根据40102e和401033可知，输入的第一个数需小于14才不会引爆炸弹。40103a到401048是调用func4函数，函数参数依次为(%rdi, %rsi, %rdx) &#x3D; (输入第一个数, 0, 14)。若函数返回值不等于0，则引爆炸弹。从401051和401056看出，输入的第二个数必须等于0才不会引爆炸弹。接下来我们看看func4函数在做什么。</p>
+<p><img src="/images/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%B3%BB%E7%BB%9F/phase4-2.png" alt="phase4-2"></p>
+<p>首先可以看出func4函数是个递归函数。通过400ff7和400ff9可看出，跳出递归的条件是第二个和第三个函参经过一串运算后的结果≥第一个函参。这里，我们当然可以翻译上面的汇编语言弄清func4函数的每一步，但是在Recitation课助教有提到过，这个lab的目的不在于此，所以我们可以通过尝试的方法试出7 0是一个能解除炸弹的输入。</p>
+<h2>Phase 5</h2>
+
+<p><img src="/images/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%B3%BB%E7%BB%9F/phase5-1.png" alt="phase5-1"></p>
+<p>phase 5首先检查输入是否是长度为6的字符串。40108b到4010ac是for循环，循环自变量为%rax，从0加到6，使循环进行了6次，所以可以断定这个循环就是用来遍历输入字符串里每个字符的。那么遍历字符用来做什么呢？我们从循环内部的头开始看，因为%rbx在401067处被赋值为输入字符串的首地址，所以40108b是将%rcx赋值为字符的ASCII值。401099处我们看到有一个常量。设置断点并打印地址0x4024b0所存储的值。这个字符串常量是用来干嘛的呢？</p>
+<p><img src="/images/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%B3%BB%E7%BB%9F/phase5-2.png" alt="phase5-2"></p>
+<p>不如往下看看，在4010bd处调用strings_not_equal函数，通过在4010b8设置断点并打印%rsi可知for循环后输入应变为flyers。</p>
+<p><img src="/images/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%B3%BB%E7%BB%9F/phase5-3.png" alt="phase5-3"></p>
+<p>所以猜测，我们的输入是为了给0x4024b0存的字符串常量提供偏移量，在for循环里依次选择字符，以与flyers相等。因此，偏移量依次为9(1001), 15(1111), 14(1110), 5(0101), 6(0110), 7(0111)。由于401096处将0xf与%edx相与，所以我们只要保证输入字符ASCII值的低4位等于偏移量即可。其中ionefg是一个正确答案。</p>
+<p><img src="/images/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%B3%BB%E7%BB%9F/phase5-4.png" alt="phase5-4"></p>
+<h2>Phase 6</h2>
+
+<p>phase 6的代码很长，我们分段来看。</p>
+<h3>第1段</h3>
+
+<p><img src="/images/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%B3%BB%E7%BB%9F/phase6-1.png" alt="phase6-1"></p>
+<p>与phase 2相同，phase 6要输入6个数字。一开始%r13存储的是输入数组的首地址(4001100)，在40114d处%r13被更新成数组下一个元素的地址。根据401117-401121可知，数组每个元素都要小于等于6，否则会引爆炸弹。第二枚炸弹在401140处，若当前元素等于数组中其他元素，会引爆炸弹。</p>
+<h3>第2段</h3>
+
+<p><img src="/images/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%B3%BB%E7%BB%9F/phase6-2.png" alt="phase6-2"></p>
+<p>0x18 &#x3D; 24 &#x3D; 4bytes&#x2F;int x 6ints，所以%rsi存的是输入数组的边界地址，用来在40116a处判断是否越界。%r14在40110b处被赋值为数组的首地址，所以%rax即为数组首地址。这段代码的作用就是用7减去数组元素，并将结果替换原有值。</p>
+<h3>第3段</h3>
+
+<p><img src="/images/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%B3%BB%E7%BB%9F/phase6-3.png" alt="phase6-3"></p>
+<p>从头走一遍代码可知，%esi存的是数组下标，%ecx存的是数组第%esi个元素。在401181和4011a4处都出现了一个地址常量0x6032d0，通过设置不同长度参数打印该地址存储的内容后，发现这其实是个链表数据结构。第一列为结点值，第二列为结点编号，第三列为下一个结点的地址（即next pointer），第四列为空。再看401188指令，该指令的作用是将第%ecx个元素的地址存储在以(0x20 + %rsp)为基址，2*%rsi为偏移量的地址中。举个例子，假设输入数组为[3, 4, 5, 6, 1, 2]，则依次会将链表第3个结点、第4个结点、……、第2个结点的首地址存到新地址中。该操作等价于将输入数组重新排序。</p>
+<p><img src="/images/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%B3%BB%E7%BB%9F/phase6-4.png" alt="phase6-4"></p>
+<h3>第4段</h3>
+
+<p><img src="/images/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%B3%BB%E7%BB%9F/phase6-5.png" alt="phase6-5"></p>
+<p>有了第3段的基础，第4段的作用便较容易猜测。取新地址中两个连续结点node1, node2，令node1.next &#x3D; node2。</p>
+<h3>第5段</h3>
+
+<p><img src="/images/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%B3%BB%E7%BB%9F/phase6-6.png" alt="phase6-6"></p>
+<p>这段的作用是判断新地址存的链表是否为递减序列，若不是，则会引爆炸弹。</p>
+<h3>总和</h3>
+
+<p>综上所述，phase 6的操作总结如下。</p>
+<ol>
+    <li>判断是否输入数组每个元素nums[i] ≤ 6，且输入数组没有重复元素。</li>
+    <li>nums[i] = 7 - nums[i]</li>
+    <li>依据数组元素值重排为递减序列。</li>
+</ol>
+因此，根据0x6032d0地址中链表的结点值从大到小排序，则排序后的链表为[3, 4, 5, 6, 1, 2]。再倒推第二步，7 - [3, 4, 5, 6, 1, 2] = [4, 3, 2, 1, 6, 5]，即为输入的6个数。
+
+<h2>结果</h2>
+
+<p>6个炸弹全部成功破解！<br><img src="/images/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%B3%BB%E7%BB%9F/result.png" alt="result"></p>
+<h2>参考资料</h2>
+https://blog.csdn.net/vcomp/article/details/51485776?utm_medium=distribute.pc_relevant.none-task-blog-BlogCommendFromMachineLearnPai2-2.control&depth_1-utm_source=distribute.pc_relevant.none-task-blog-BlogCommendFromMachineLearnPai2-2.control
+ASCII表：https://bournetocode.com/projects/GCSE_Computing_Fundamentals/pages/3-3-5-ascii.html
+Phase 6：https://blog.csdn.net/zjwreal/article/details/80925989
+Phase 6：http://zpalexander.com/binary-bomb-lab-phase-6/
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+        
+          <li><a href="/">Home</a></li>
+        
+          <li><a href="/tags/">Tag</a></li>
+        
+          <li><a href="/archives/">Writing</a></li>
+        
+      </ul>
+    </div>
+
+    
+    
+      <div id="toc-footer" style="display: none">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link"><span class="toc-number">1.</span> <span class="toc-text">背景知识</span></a></li><li class="toc-item toc-level-2"><a class="toc-link"><span class="toc-number">2.</span> <span class="toc-text">Tips</span></a></li><li class="toc-item toc-level-2"><a class="toc-link"><span class="toc-number">3.</span> <span class="toc-text">Phase 1</span></a></li><li class="toc-item toc-level-2"><a class="toc-link"><span class="toc-number">4.</span> <span class="toc-text">Phase 2</span></a></li><li class="toc-item toc-level-2"><a class="toc-link"><span class="toc-number">5.</span> <span class="toc-text">Phase 3</span></a></li><li class="toc-item toc-level-2"><a class="toc-link"><span class="toc-number">6.</span> <span class="toc-text">Phase 4</span></a></li><li class="toc-item toc-level-2"><a class="toc-link"><span class="toc-number">7.</span> <span class="toc-text">Phase 5</span></a></li><li class="toc-item toc-level-2"><a class="toc-link"><span class="toc-number">8.</span> <span class="toc-text">Phase 6</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link"><span class="toc-number">8.1.</span> <span class="toc-text">第1段</span></a></li><li class="toc-item toc-level-3"><a class="toc-link"><span class="toc-number">8.2.</span> <span class="toc-text">第2段</span></a></li><li class="toc-item toc-level-3"><a class="toc-link"><span class="toc-number">8.3.</span> <span class="toc-text">第3段</span></a></li><li class="toc-item toc-level-3"><a class="toc-link"><span class="toc-number">8.4.</span> <span class="toc-text">第4段</span></a></li><li class="toc-item toc-level-3"><a class="toc-link"><span class="toc-number">8.5.</span> <span class="toc-text">第5段</span></a></li><li class="toc-item toc-level-3"><a class="toc-link"><span class="toc-number">8.6.</span> <span class="toc-text">总和</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link"><span class="toc-number">9.</span> <span class="toc-text">结果</span></a></li><li class="toc-item toc-level-2"><a class="toc-link"><span class="toc-number">10.</span> <span class="toc-text">参考资料</span></a></li></ol>
+      </div>
+    
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://xiameng97hz.github.io/2021/01/29/CMU15213-Lab2-Bomb-lab/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://xiameng97hz.github.io/2021/01/29/CMU15213-Lab2-Bomb-lab/&text=CMU15213 Lab2 Bomb lab"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://xiameng97hz.github.io/2021/01/29/CMU15213-Lab2-Bomb-lab/&title=CMU15213 Lab2 Bomb lab"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://xiameng97hz.github.io/2021/01/29/CMU15213-Lab2-Bomb-lab/&is_video=false&description=CMU15213 Lab2 Bomb lab"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=CMU15213 Lab2 Bomb lab&body=Check out this article: https://xiameng97hz.github.io/2021/01/29/CMU15213-Lab2-Bomb-lab/"><i class="fa-solid fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://xiameng97hz.github.io/2021/01/29/CMU15213-Lab2-Bomb-lab/&title=CMU15213 Lab2 Bomb lab"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://xiameng97hz.github.io/2021/01/29/CMU15213-Lab2-Bomb-lab/&title=CMU15213 Lab2 Bomb lab"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://xiameng97hz.github.io/2021/01/29/CMU15213-Lab2-Bomb-lab/&title=CMU15213 Lab2 Bomb lab"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://xiameng97hz.github.io/2021/01/29/CMU15213-Lab2-Bomb-lab/&title=CMU15213 Lab2 Bomb lab"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://xiameng97hz.github.io/2021/01/29/CMU15213-Lab2-Bomb-lab/&name=CMU15213 Lab2 Bomb lab&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://xiameng97hz.github.io/2021/01/29/CMU15213-Lab2-Bomb-lab/&t=CMU15213 Lab2 Bomb lab"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fa-solid fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        
+          <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fa-solid fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fa-solid fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2020-2024
+    xiameng
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        <!--
+       --><li><a href="/">Home</a></li><!--
+     --><!--
+       --><li><a href="/tags/">Tag</a></li><!--
+     --><!--
+       --><li><a href="/archives/">Writing</a></li><!--
+     -->
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script>
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script>
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"Copy to clipboard!\">";
+    btn += '<i class="fa-regular fa-clone"></i>';
+    btn += '</span>';
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "Copied!");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Disqus Comments -->
+
+<!-- utterances Comments -->
+
+</body>
+</html>

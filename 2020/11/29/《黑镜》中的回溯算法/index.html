@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="前些日子看英剧《黑镜：潘达斯奈基》的时候，突然觉得其叙事结构与回溯算法（Backtracking）的思想颇为相似。《潘达斯奈基》讲述的是年轻程序员 Stephen 开发了一个名为《潘达斯奈基》的冒险类电脑游戏，该游戏文本是基于书籍《选择自己的冒险》。为了将自己的游戏推广于世，Stephen 将游戏交给了为电脑游戏公司塔克软件工作的 Mohan 分发宣传，而 Stephen 则独自在家中完成游戏开发">
+<meta property="og:type" content="article">
+<meta property="og:title" content="《黑镜》中的回溯算法">
+<meta property="og:url" content="https://xiameng97hz.github.io/2020/11/29/%E3%80%8A%E9%BB%91%E9%95%9C%E3%80%8B%E4%B8%AD%E7%9A%84%E5%9B%9E%E6%BA%AF%E7%AE%97%E6%B3%95/index.html">
+<meta property="og:site_name" content="xiameng">
+<meta property="og:description" content="前些日子看英剧《黑镜：潘达斯奈基》的时候，突然觉得其叙事结构与回溯算法（Backtracking）的思想颇为相似。《潘达斯奈基》讲述的是年轻程序员 Stephen 开发了一个名为《潘达斯奈基》的冒险类电脑游戏，该游戏文本是基于书籍《选择自己的冒险》。为了将自己的游戏推广于世，Stephen 将游戏交给了为电脑游戏公司塔克软件工作的 Mohan 分发宣传，而 Stephen 则独自在家中完成游戏开发">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://xiameng97hz.github.io/images/%E9%9A%8F%E7%AC%94/Black_Mirror_Bandersnatch.jpeg">
+<meta property="article:published_time" content="2020-11-30T03:15:30.000Z">
+<meta property="article:modified_time" content="2024-06-29T02:45:09.147Z">
+<meta property="article:author" content="xiameng">
+<meta property="article:tag" content="随笔">
+<meta property="article:tag" content="算法">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://xiameng97hz.github.io/images/%E9%9A%8F%E7%AC%94/Black_Mirror_Bandersnatch.jpeg">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>《黑镜》中的回溯算法</title>
+    <!-- async scripts -->
+    <!-- Google Analytics -->
+
+
+    <!-- Umami Analytics -->
+
+
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+<meta name="generator" content="Hexo 7.2.0"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="Menu"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="Menu"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="Top" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fa-solid fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        <!--
+       --><li><a href="/">Home</a></li><!--
+     --><!--
+       --><li><a href="/tags/">Tag</a></li><!--
+     --><!--
+       --><li><a href="/archives/">Writing</a></li><!--
+     -->
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" aria-label="Previous post" href="/2020/12/29/12%E6%9C%88%E8%8B%B1%E8%AF%AD%E5%AD%A6%E4%B9%A0%E2%80%94%E2%80%94TED%E6%BC%94%E8%AE%B2/"><i class="fa-solid fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" aria-label="Back to top" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="Share post" href="#"><i class="fa-solid fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://xiameng97hz.github.io/2020/11/29/%E3%80%8A%E9%BB%91%E9%95%9C%E3%80%8B%E4%B8%AD%E7%9A%84%E5%9B%9E%E6%BA%AF%E7%AE%97%E6%B3%95/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://xiameng97hz.github.io/2020/11/29/%E3%80%8A%E9%BB%91%E9%95%9C%E3%80%8B%E4%B8%AD%E7%9A%84%E5%9B%9E%E6%BA%AF%E7%AE%97%E6%B3%95/&text=《黑镜》中的回溯算法"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://xiameng97hz.github.io/2020/11/29/%E3%80%8A%E9%BB%91%E9%95%9C%E3%80%8B%E4%B8%AD%E7%9A%84%E5%9B%9E%E6%BA%AF%E7%AE%97%E6%B3%95/&title=《黑镜》中的回溯算法"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://xiameng97hz.github.io/2020/11/29/%E3%80%8A%E9%BB%91%E9%95%9C%E3%80%8B%E4%B8%AD%E7%9A%84%E5%9B%9E%E6%BA%AF%E7%AE%97%E6%B3%95/&is_video=false&description=《黑镜》中的回溯算法"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=《黑镜》中的回溯算法&body=Check out this article: https://xiameng97hz.github.io/2020/11/29/%E3%80%8A%E9%BB%91%E9%95%9C%E3%80%8B%E4%B8%AD%E7%9A%84%E5%9B%9E%E6%BA%AF%E7%AE%97%E6%B3%95/"><i class="fa-solid fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://xiameng97hz.github.io/2020/11/29/%E3%80%8A%E9%BB%91%E9%95%9C%E3%80%8B%E4%B8%AD%E7%9A%84%E5%9B%9E%E6%BA%AF%E7%AE%97%E6%B3%95/&title=《黑镜》中的回溯算法"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://xiameng97hz.github.io/2020/11/29/%E3%80%8A%E9%BB%91%E9%95%9C%E3%80%8B%E4%B8%AD%E7%9A%84%E5%9B%9E%E6%BA%AF%E7%AE%97%E6%B3%95/&title=《黑镜》中的回溯算法"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://xiameng97hz.github.io/2020/11/29/%E3%80%8A%E9%BB%91%E9%95%9C%E3%80%8B%E4%B8%AD%E7%9A%84%E5%9B%9E%E6%BA%AF%E7%AE%97%E6%B3%95/&title=《黑镜》中的回溯算法"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://xiameng97hz.github.io/2020/11/29/%E3%80%8A%E9%BB%91%E9%95%9C%E3%80%8B%E4%B8%AD%E7%9A%84%E5%9B%9E%E6%BA%AF%E7%AE%97%E6%B3%95/&title=《黑镜》中的回溯算法"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://xiameng97hz.github.io/2020/11/29/%E3%80%8A%E9%BB%91%E9%95%9C%E3%80%8B%E4%B8%AD%E7%9A%84%E5%9B%9E%E6%BA%AF%E7%AE%97%E6%B3%95/&name=《黑镜》中的回溯算法&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://xiameng97hz.github.io/2020/11/29/%E3%80%8A%E9%BB%91%E9%95%9C%E3%80%8B%E4%B8%AD%E7%9A%84%E5%9B%9E%E6%BA%AF%E7%AE%97%E6%B3%95/&t=《黑镜》中的回溯算法"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    
+    
+  </span>
+</div>
+
+    
+    <div class="content index py4 ">
+        
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle p-name" itemprop="name headline">
+        《黑镜》中的回溯算法
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author p-author h-card" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span class="p-name" itemprop="name">xiameng</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2020-11-30T03:15:30.000Z" class="dt-published" itemprop="datePublished">2020-11-29</time>
+        
+      
+    </div>
+
+
+      
+
+      
+    <div class="article-tag">
+        <i class="fa-solid fa-tag"></i>
+        <a class="p-category" href="/tags/%E7%AE%97%E6%B3%95/" rel="tag">算法</a>, <a class="p-category" href="/tags/%E9%9A%8F%E7%AC%94/" rel="tag">随笔</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content e-content" itemprop="articleBody">
+    <p>前些日子看英剧《黑镜：潘达斯奈基》的时候，突然觉得其叙事结构与回溯算法（Backtracking）的思想颇为相似。《潘达斯奈基》讲述的是年轻程序员 Stephen 开发了一个名为《潘达斯奈基》的冒险类电脑游戏，该游戏文本是基于书籍《选择自己的冒险》。为了将自己的游戏推广于世，Stephen 将游戏交给了为电脑游戏公司塔克软件工作的 Mohan 分发宣传，而 Stephen 则独自在家中完成游戏开发。逐渐地，Stephen 开始觉得自己受到控制，并以与书籍作者 Jerome F. Davies 所做的同样方式陷入疯狂。《潘达斯奈基》是《黑镜》观众互动模式的首次尝试，将剧情发展的几个关键点交由观众自己来选择，观众可以从给定的两个走向中选择其一，以此，主人公 Stephen 的生死也交由观众手上。</p>
+<p>回溯算法是暴力搜索法中的一种，通过在每个岔路口选择不同走向的路寻找目的地，一个岔路口、一个岔路口的去尝试。如果走错了路，则返回上一个岔路口，走另一条路，直到找到目的地。回溯算法的经典题包括八皇后问题（N-Queens）、求集合的所有子集、集合中元素的所有排列组合等等。利用回溯算法的解题思考过程和代码框架有一定的套路。在 <a target="_blank" rel="noopener" href="https://labuladong.gitbook.io/algo/di-ling-zhang-bi-du-xi-lie/hui-su-suan-fa-xiang-jie-xiu-ding-ban">labuladong 的算法小抄</a> 中，回溯算法被等价于多叉树的遍历问题。其文章中也给出了解决回溯问题需要考虑的三个关键基本问题和解题框架。下面是我的 Java 版本。</p>
+<p>1、路径：历史选择。<br>2、选择列表：当前可选项。<br>3、结束条件：到达多叉树最后一层，无法再做选择时的条件。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> List&lt;List&lt;T&gt;&gt; <span class="title function_">solution</span><span class="params">(选择列表)</span>&#123;</span><br><span class="line">    List&lt;List&lt;T&gt;&gt; 返回结果 = <span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;&gt;();</span><br><span class="line">    List&lt;T&gt; 当前路径 = <span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;&gt;();</span><br><span class="line">    backtrack(选择列表，当前路径, 返回结果, ...);</span><br><span class="line">    <span class="keyword">return</span> 返回结果;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title function_">backtrack</span><span class="params">(选择列表，当前路径, 返回结果，...)</span>:</span><br><span class="line">    <span class="keyword">if</span>(满足结束条件)&#123;</span><br><span class="line">        返回结果.add(<span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;&gt;(当前路径));</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">for</span>(选择 : 选择列表)&#123;</span><br><span class="line">        当前路径.add(选择);</span><br><span class="line">        从选择列表里将该选择移除;</span><br><span class="line">        backtrack(选择列表，当前路径, 返回结果，...);</span><br><span class="line">        当前路径.remove(选择);</span><br><span class="line">        将该选择再加入选择列表;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>那么，如何判断某道题能不能用回溯算法呢？当解题中设计取舍时，就可以考虑使用回溯算法。例如，leetcode 高频题 <a target="_blank" rel="noopener" href="https://leetcode.com/problems/combination-sum/">Combinations Sum</a>：给定一数组和一目标总和 target，求用这个数组里的元素组成和为 target 的所有可能的组合。这里取舍发生于数组每个元素的选与不选。这道题三个基本问题的解答分别是，路径为已经选过的数组元素，选择列表为当前数组的剩余元素，结束条件是选择过的数组元素和等于 target。</p>
+<p>最后，回到这部剧集。看《潘达斯奈基》的时候，觉得特别津津有味的是它涉及到了三层相同逻辑的嵌套。最内一层是 Stephen 设计的可自选故事走向的电子游戏，游戏角色的命运被玩家掌握。第二层是 Stephen 本人感觉自己的行为受到了他人的控制。虽然剧情没有点明控制 Stephen 的是谁，但是从某种角度上说，控制他人生的正是坐在电脑屏幕前的我们。而这也禁不住让我再向外延展一层思考，我们的人生轨迹是否也像 Stephen 一样，被观看这一故事背景更宏大、时间跨度更长久的剧集的”观众“所控制呢？谁又能确凿地说自己所处的这个世界不是一局精心设计的游戏、不是一场苦心编排的戏剧呢？</p>
+<p><img src="/images/%E9%9A%8F%E7%AC%94/Black_Mirror_Bandersnatch.jpeg" alt="Black_Mirror_Bandersnatch"></p>
+
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+        
+          <li><a href="/">Home</a></li>
+        
+          <li><a href="/tags/">Tag</a></li>
+        
+          <li><a href="/archives/">Writing</a></li>
+        
+      </ul>
+    </div>
+
+    
+    
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://xiameng97hz.github.io/2020/11/29/%E3%80%8A%E9%BB%91%E9%95%9C%E3%80%8B%E4%B8%AD%E7%9A%84%E5%9B%9E%E6%BA%AF%E7%AE%97%E6%B3%95/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://xiameng97hz.github.io/2020/11/29/%E3%80%8A%E9%BB%91%E9%95%9C%E3%80%8B%E4%B8%AD%E7%9A%84%E5%9B%9E%E6%BA%AF%E7%AE%97%E6%B3%95/&text=《黑镜》中的回溯算法"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://xiameng97hz.github.io/2020/11/29/%E3%80%8A%E9%BB%91%E9%95%9C%E3%80%8B%E4%B8%AD%E7%9A%84%E5%9B%9E%E6%BA%AF%E7%AE%97%E6%B3%95/&title=《黑镜》中的回溯算法"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://xiameng97hz.github.io/2020/11/29/%E3%80%8A%E9%BB%91%E9%95%9C%E3%80%8B%E4%B8%AD%E7%9A%84%E5%9B%9E%E6%BA%AF%E7%AE%97%E6%B3%95/&is_video=false&description=《黑镜》中的回溯算法"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=《黑镜》中的回溯算法&body=Check out this article: https://xiameng97hz.github.io/2020/11/29/%E3%80%8A%E9%BB%91%E9%95%9C%E3%80%8B%E4%B8%AD%E7%9A%84%E5%9B%9E%E6%BA%AF%E7%AE%97%E6%B3%95/"><i class="fa-solid fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://xiameng97hz.github.io/2020/11/29/%E3%80%8A%E9%BB%91%E9%95%9C%E3%80%8B%E4%B8%AD%E7%9A%84%E5%9B%9E%E6%BA%AF%E7%AE%97%E6%B3%95/&title=《黑镜》中的回溯算法"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://xiameng97hz.github.io/2020/11/29/%E3%80%8A%E9%BB%91%E9%95%9C%E3%80%8B%E4%B8%AD%E7%9A%84%E5%9B%9E%E6%BA%AF%E7%AE%97%E6%B3%95/&title=《黑镜》中的回溯算法"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://xiameng97hz.github.io/2020/11/29/%E3%80%8A%E9%BB%91%E9%95%9C%E3%80%8B%E4%B8%AD%E7%9A%84%E5%9B%9E%E6%BA%AF%E7%AE%97%E6%B3%95/&title=《黑镜》中的回溯算法"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://xiameng97hz.github.io/2020/11/29/%E3%80%8A%E9%BB%91%E9%95%9C%E3%80%8B%E4%B8%AD%E7%9A%84%E5%9B%9E%E6%BA%AF%E7%AE%97%E6%B3%95/&title=《黑镜》中的回溯算法"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://xiameng97hz.github.io/2020/11/29/%E3%80%8A%E9%BB%91%E9%95%9C%E3%80%8B%E4%B8%AD%E7%9A%84%E5%9B%9E%E6%BA%AF%E7%AE%97%E6%B3%95/&name=《黑镜》中的回溯算法&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://xiameng97hz.github.io/2020/11/29/%E3%80%8A%E9%BB%91%E9%95%9C%E3%80%8B%E4%B8%AD%E7%9A%84%E5%9B%9E%E6%BA%AF%E7%AE%97%E6%B3%95/&t=《黑镜》中的回溯算法"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fa-solid fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fa-solid fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2020-2024
+    xiameng
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        <!--
+       --><li><a href="/">Home</a></li><!--
+     --><!--
+       --><li><a href="/tags/">Tag</a></li><!--
+     --><!--
+       --><li><a href="/archives/">Writing</a></li><!--
+     -->
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script>
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script>
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"Copy to clipboard!\">";
+    btn += '<i class="fa-regular fa-clone"></i>';
+    btn += '</span>';
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "Copied!");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Disqus Comments -->
+
+<!-- utterances Comments -->
+
+</body>
+</html>
