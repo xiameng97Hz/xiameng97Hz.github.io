@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="一开始被长篇的instructions吓到，有些无从下手。Hints里给出了starting point:  • One way to get started is to modify mr&#x2F;worker.go’s Worker() to send an RPC to the coordinator asking for a task. Then modify the coordinat">
+<meta property="og:type" content="article">
+<meta property="og:title" content="MIT 6.5840 Lab 1: MapReduce">
+<meta property="og:url" content="https://xiameng97hz.github.io/2024/07/13/MIT-6-5840-Lab-1-MapReduce/index.html">
+<meta property="og:site_name" content="xiameng">
+<meta property="og:description" content="一开始被长篇的instructions吓到，有些无从下手。Hints里给出了starting point:  • One way to get started is to modify mr&#x2F;worker.go’s Worker() to send an RPC to the coordinator asking for a task. Then modify the coordinat">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://xiameng97hz.github.io/images/DistributedSystem/MapReduce-1.png">
+<meta property="og:image" content="https://xiameng97hz.github.io/images/DistributedSystem/MapReduce-2.png">
+<meta property="og:image" content="https://xiameng97hz.github.io/images/DistributedSystem/MapReduce-3.png">
+<meta property="og:image" content="https://xiameng97hz.github.io/images/DistributedSystem/MapReduce-6.png">
+<meta property="og:image" content="https://xiameng97hz.github.io/images/DistributedSystem/MapReduce-4.png">
+<meta property="og:image" content="https://xiameng97hz.github.io/images/DistributedSystem/MapReduce-5.png">
+<meta property="article:published_time" content="2024-07-13T16:14:25.000Z">
+<meta property="article:modified_time" content="2024-07-13T17:33:13.200Z">
+<meta property="article:author" content="xiameng">
+<meta property="article:tag" content="Distributed System">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://xiameng97hz.github.io/images/DistributedSystem/MapReduce-1.png">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>MIT 6.5840 Lab 1: MapReduce</title>
+    <!-- async scripts -->
+    <!-- Google Analytics -->
+
+
+    <!-- Umami Analytics -->
+
+
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+<meta name="generator" content="Hexo 7.2.0"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="Menu"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="Menu"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="Top" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fa-solid fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        <!--
+       --><li><a href="/">Home</a></li><!--
+     --><!--
+       --><li><a href="/tags/">Tag</a></li><!--
+     --><!--
+       --><li><a href="/archives/">Writing</a></li><!--
+     -->
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        
+        <li><a class="icon" aria-label="Next post" href="/2024/06/18/%E9%9F%B3%E4%B9%90%E5%89%A7%E3%80%8ACompany%E3%80%8B%E8%A7%82%E5%90%8E%E6%84%9F/"><i class="fa-solid fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="Back to top" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="Share post" href="#"><i class="fa-solid fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://xiameng97hz.github.io/2024/07/13/MIT-6-5840-Lab-1-MapReduce/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://xiameng97hz.github.io/2024/07/13/MIT-6-5840-Lab-1-MapReduce/&text=MIT 6.5840 Lab 1: MapReduce"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://xiameng97hz.github.io/2024/07/13/MIT-6-5840-Lab-1-MapReduce/&title=MIT 6.5840 Lab 1: MapReduce"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://xiameng97hz.github.io/2024/07/13/MIT-6-5840-Lab-1-MapReduce/&is_video=false&description=MIT 6.5840 Lab 1: MapReduce"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=MIT 6.5840 Lab 1: MapReduce&body=Check out this article: https://xiameng97hz.github.io/2024/07/13/MIT-6-5840-Lab-1-MapReduce/"><i class="fa-solid fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://xiameng97hz.github.io/2024/07/13/MIT-6-5840-Lab-1-MapReduce/&title=MIT 6.5840 Lab 1: MapReduce"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://xiameng97hz.github.io/2024/07/13/MIT-6-5840-Lab-1-MapReduce/&title=MIT 6.5840 Lab 1: MapReduce"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://xiameng97hz.github.io/2024/07/13/MIT-6-5840-Lab-1-MapReduce/&title=MIT 6.5840 Lab 1: MapReduce"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://xiameng97hz.github.io/2024/07/13/MIT-6-5840-Lab-1-MapReduce/&title=MIT 6.5840 Lab 1: MapReduce"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://xiameng97hz.github.io/2024/07/13/MIT-6-5840-Lab-1-MapReduce/&name=MIT 6.5840 Lab 1: MapReduce&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://xiameng97hz.github.io/2024/07/13/MIT-6-5840-Lab-1-MapReduce/&t=MIT 6.5840 Lab 1: MapReduce"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    
+    
+      <div id="toc">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Phase-1"><span class="toc-number">1.</span> <span class="toc-text">Phase 1</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Phase-2"><span class="toc-number">2.</span> <span class="toc-text">Phase 2</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Phase-3"><span class="toc-number">3.</span> <span class="toc-text">Phase 3</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%98%8E%E7%A1%AE%E7%8A%B6%E6%80%81"><span class="toc-number">3.1.</span> <span class="toc-text">明确状态</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Crash%E5%A4%84%E7%90%86"><span class="toc-number">3.2.</span> <span class="toc-text">Crash处理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Data-race"><span class="toc-number">3.3.</span> <span class="toc-text">Data race</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9C%80%E7%BB%88%E7%BB%93%E6%9E%9C"><span class="toc-number">4.</span> <span class="toc-text">最终结果</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%80%BB%E7%BB%93"><span class="toc-number">5.</span> <span class="toc-text">总结</span></a></li></ol>
+      </div>
+    
+  </span>
+</div>
+
+    
+    <div class="content index py4 ">
+        
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle p-name" itemprop="name headline">
+        MIT 6.5840 Lab 1: MapReduce
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author p-author h-card" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span class="p-name" itemprop="name">xiameng</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2024-07-13T16:14:25.000Z" class="dt-published" itemprop="datePublished">2024-07-13</time>
+        
+      
+    </div>
+
+
+      
+
+      
+    <div class="article-tag">
+        <i class="fa-solid fa-tag"></i>
+        <a class="p-category" href="/tags/Distributed-System/" rel="tag">Distributed System</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content e-content" itemprop="articleBody">
+    <p>一开始被长篇的instructions吓到，有些无从下手。<br>Hints里给出了starting point:</p>
+<blockquote>
+<p>• One way to get started is to modify mr&#x2F;worker.go’s Worker() to send an RPC to the coordinator asking for a task. Then modify the coordinator to respond with the file name of an as-yet-unstarted map task. Then modify the worker to read that file and call the application Map function, as in mrsequential.go.</p>
+</blockquote>
+<h2 id="Phase-1"><a href="#Phase-1" class="headerlink" title="Phase 1"></a>Phase 1</h2><p>Phase 1实现的是三个部分：</p>
+<ol>
+<li>Coordinator initializes map tasks</li>
+<li>Coordinator与Worker间通信</li>
+<li>Workers do map tasks</li>
+</ol>
+<p><strong>Challenge</strong>: 在实现过程中，困住我的一点是要如何让worker区分task是Map还是Reduce<br>  <strong>Solution</strong>: 在Task结构体加上标识</p>
+<p><strong>Challenge</strong>: How to deal with concurrency?<br>  <strong>Solution</strong>: Use channels in Go</p>
+<p><strong>Problem</strong>: <code>rpc: gob error encoding body: gob: type mr.Response has no exported fields</code><br>  <strong>Cause</strong>: In Go, fields and variables that start with an Uppercase letter are “Exported”, and are visible to other packages. Fields that start with a lowercase letter are “unexported”, and are only visible inside their own package.<br>  <strong>Solution</strong>: need to capitalize all fields in structs</p>
+<p>把DoMapTask功能实现后，跑了一下coordinator和worker，call succeeded!并且输出了一系列intermediate files。打开其中一个文件，可以看到key-value pairs是按照hashed key分到不同文件的，说明同一个key只会存在于一个文件里。但一个文件里，相同的key并没有group到一起。</p>
+<p><img src="/images/DistributedSystem/MapReduce-1.png" alt="MapReduce-1"><br><img src="/images/DistributedSystem/MapReduce-2.png" alt="MapReduce-2"></p>
+<h2 id="Phase-2"><a href="#Phase-2" class="headerlink" title="Phase 2"></a>Phase 2</h2><p>Phase 2实现的是</p>
+<ol>
+<li>Coordinator initializes reduce tasks</li>
+<li>Workers do reduce tasks</li>
+</ol>
+<p>有了Phase 1的基础，这部分就好做很多。</p>
+<p>Coordinator makes reduce tasks是需要读取我们在phase 1中输出的中间文件的。网上搜了下读取文件的方法，我用到的是<code>ioutil.ReadDir()</code>读取指定目录下的所有文件，<code>filepath.Match(pattern, file.Name())</code>筛选出符合pattern的文件。</p>
+<p>Worker does reduce tasks的实现直接参考<code>mrsequential.go</code></p>
+<p>❓How to combine keys across different reduce workers? Say reduce worker 1 has &lt;key 1, value 1&gt; and reduce worker 2 has &lt;key 1, value 2&gt;, how to make sure two intermediate pairs with the same key1 go to one output file?<br>  <strong>Answer</strong>: Sort by key, and use two pointers to check the range of pairs with the same key. See <code>mrsequential.go</code> reduce part. </p>
+<p>下面是输出文件：<br><img src="/images/DistributedSystem/MapReduce-3.png" alt="MapReduce-3"></p>
+<h2 id="Phase-3"><a href="#Phase-3" class="headerlink" title="Phase 3"></a>Phase 3</h2><p>Phase 3实现的是</p>
+<ol>
+<li>Add Map and Reduce together</li>
+<li>Coordinator should know the current processing state</li>
+</ol>
+<p>这个部分是我耗时最多的，也是涉及到Concurrency，比较重要的一部分。</p>
+<h3 id="明确状态"><a href="#明确状态" class="headerlink" title="明确状态"></a>明确状态</h3><p>一共有几个state？</p>
+<ol>
+<li>There are map tasks left to be assigned</li>
+<li>All map tasks are being assigned to workers, and need to wait all map tasks to finish to start reduce tasks</li>
+<li>All map tasks are finished, and can start reduce tasks</li>
+<li>There are reduce tasks left to be assigned</li>
+<li>All reduce tasks are being assigned to workers, and need to wait all reduce tasks to finish</li>
+<li>All reduce tasks are finished, and can exit the program</li>
+</ol>
+<p><strong>Coordinator</strong>：State转换，并准备对应state下的task</p>
+<ol>
+<li>传给worker map task</li>
+<li>告知worker等待，这里我是通过传给worker一个TaskType为Waiting的task来实现的</li>
+<li>转换到下一个state，也就是Reduce state，以initialize reduce tasks</li>
+<li>传给worker reduce task</li>
+<li>告知worker等待，同2</li>
+<li>转换到下一个state，也就是Finished state</li>
+</ol>
+<p><strong>Worker</strong>：在不同state下做不同的事</p>
+<ol>
+<li>worker gets a map task and does map task</li>
+<li>worker should wait，这里是通过<code>time.Sleep()</code>实现的</li>
+<li>跳过，worker不会知道这个state</li>
+<li>worker gets a reduce task and does reduce task</li>
+<li>worker should wait，同2</li>
+<li>worker exits the program</li>
+</ol>
+<p>❓Coordinator如何知道worker做完了task？<br>    Worker需要告知Coordinator Task已完成。这里需要给Task结构体添加一个State，State可能的取值有Unassigned, Processing, Finished。当task已完成时，coordinator需要将这个task的state从Processing变为Finished。这个State会在判断tasks是否全部完成的时候用到。</p>
+<p>下面附上Coordinator这部分的代码。<br><img src="/images/DistributedSystem/MapReduce-6.png" alt="MapReduce-6"></p>
+<h3 id="Crash处理"><a href="#Crash处理" class="headerlink" title="Crash处理"></a>Crash处理</h3><p>❓Coordinator如何知道worker is dead&#x2F;timeout？如何实现？<br>    在一个新thread里每隔一段时间查看正在处理中的task是否超时。创建新thread用到的是<code>gorountine</code>。判断超时是通过给Task结构体加一个StartTime，在分配给worker的时候，给StartTime附上当前的时间戳。若当前时间 - StartTime &gt; 10 seconds时，说明task超时，需要将其重新分配给新的worker。</p>
+<p>❓因为有dead worker存在的可能性，所以map worker在写入intermediate文件和reduce worker在写入最终输出文件的中途可能crash，从而导致文件无效。如何处理这种情况？<br>    Instructions中的Hints给出了解决方法。一开始先用<code>os.CreateTemp</code>写进temporary文件，当确定文件完整正确的时候，再用<code>os.Rename</code>将temporary文件重命名成期望的文件名。</p>
+<h3 id="Data-race"><a href="#Data-race" class="headerlink" title="Data race"></a>Data race</h3><p>运行<code>bash test-mr.sh</code>之前，要把文件里的<code>RACE=-race</code> uncomment以开启race detector。</p>
+<p><strong>犯错点1</strong><br>一开始没弄清是write加锁还是read &amp; write都需要加锁，所以在这里也花了不少时间debug。</p>
+<p>答案是每次read &amp; write shared resources时都需要先加锁，比如在查看是否有超时task时，读取coordinator当前的状态和coordinator所拥有全部tasks前需要加锁。如果一不小心有代码忘加了锁也没关系，后来才发现这部分还是很好debug的，直接看error output，在第一个代码出错的地方加上锁就好了。比如下图为detect到的某个data race。</p>
+<p><img src="/images/DistributedSystem/MapReduce-4.png" alt="MapReduce-4"></p>
+<p>通过error output发现race发生在<code>coordinator.go</code>的第77行代码处。在77行处加上锁就可以了。</p>
+<p><strong>犯错点2</strong><br>在加锁的试验过程中，有几次运行时发现代码一直在跑不退出，worker也没有收到coordinator发送的任务。一开始我以为<code>coordinator.go</code>的GetTask()里不能加锁，后来发现其实是有地方加了锁但是没有正确解锁导致的。</p>
+<h2 id="最终结果"><a href="#最终结果" class="headerlink" title="最终结果"></a>最终结果</h2><p><img src="/images/DistributedSystem/MapReduce-5.png" alt="MapReduce-5"></p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>做这个实验的时候意识到实践是非常必要的，在学习MapReduce理论知识的时候，以为自己理解了，但在做实验的过程中还是出现了因为认知不到位、理解不透彻的缘故，导致写代码没思路，好多细节不知道如何处理，以及最后read &amp; write加锁的问题。以后要多动手、多动手！</p>
+<p>总耗时：两周😭</p>
+
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+        
+          <li><a href="/">Home</a></li>
+        
+          <li><a href="/tags/">Tag</a></li>
+        
+          <li><a href="/archives/">Writing</a></li>
+        
+      </ul>
+    </div>
+
+    
+    
+      <div id="toc-footer" style="display: none">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Phase-1"><span class="toc-number">1.</span> <span class="toc-text">Phase 1</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Phase-2"><span class="toc-number">2.</span> <span class="toc-text">Phase 2</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Phase-3"><span class="toc-number">3.</span> <span class="toc-text">Phase 3</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%98%8E%E7%A1%AE%E7%8A%B6%E6%80%81"><span class="toc-number">3.1.</span> <span class="toc-text">明确状态</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Crash%E5%A4%84%E7%90%86"><span class="toc-number">3.2.</span> <span class="toc-text">Crash处理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Data-race"><span class="toc-number">3.3.</span> <span class="toc-text">Data race</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9C%80%E7%BB%88%E7%BB%93%E6%9E%9C"><span class="toc-number">4.</span> <span class="toc-text">最终结果</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%80%BB%E7%BB%93"><span class="toc-number">5.</span> <span class="toc-text">总结</span></a></li></ol>
+      </div>
+    
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://xiameng97hz.github.io/2024/07/13/MIT-6-5840-Lab-1-MapReduce/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://xiameng97hz.github.io/2024/07/13/MIT-6-5840-Lab-1-MapReduce/&text=MIT 6.5840 Lab 1: MapReduce"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://xiameng97hz.github.io/2024/07/13/MIT-6-5840-Lab-1-MapReduce/&title=MIT 6.5840 Lab 1: MapReduce"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://xiameng97hz.github.io/2024/07/13/MIT-6-5840-Lab-1-MapReduce/&is_video=false&description=MIT 6.5840 Lab 1: MapReduce"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=MIT 6.5840 Lab 1: MapReduce&body=Check out this article: https://xiameng97hz.github.io/2024/07/13/MIT-6-5840-Lab-1-MapReduce/"><i class="fa-solid fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://xiameng97hz.github.io/2024/07/13/MIT-6-5840-Lab-1-MapReduce/&title=MIT 6.5840 Lab 1: MapReduce"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://xiameng97hz.github.io/2024/07/13/MIT-6-5840-Lab-1-MapReduce/&title=MIT 6.5840 Lab 1: MapReduce"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://xiameng97hz.github.io/2024/07/13/MIT-6-5840-Lab-1-MapReduce/&title=MIT 6.5840 Lab 1: MapReduce"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://xiameng97hz.github.io/2024/07/13/MIT-6-5840-Lab-1-MapReduce/&title=MIT 6.5840 Lab 1: MapReduce"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://xiameng97hz.github.io/2024/07/13/MIT-6-5840-Lab-1-MapReduce/&name=MIT 6.5840 Lab 1: MapReduce&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://xiameng97hz.github.io/2024/07/13/MIT-6-5840-Lab-1-MapReduce/&t=MIT 6.5840 Lab 1: MapReduce"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fa-solid fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        
+          <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fa-solid fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fa-solid fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2020-2024
+    xiameng
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        <!--
+       --><li><a href="/">Home</a></li><!--
+     --><!--
+       --><li><a href="/tags/">Tag</a></li><!--
+     --><!--
+       --><li><a href="/archives/">Writing</a></li><!--
+     -->
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script>
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script>
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"Copy to clipboard!\">";
+    btn += '<i class="fa-regular fa-clone"></i>';
+    btn += '</span>';
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "Copied!");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Disqus Comments -->
+
+<!-- utterances Comments -->
+
+</body>
+</html>
